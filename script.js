@@ -174,24 +174,26 @@ function mascot() {
 }
 
 function home() {
-  app.className = "app-shell forest-bg";
+  app.className = "app-shell home-shell";
   app.innerHTML = `
     <section class="screen home asset-home" style="--home-bg:url('${ASSETS.backgrounds.home}')">
-      <div>
+      <div class="home-copy">
         <h1 class="hero-title">Misi Alam Ceria</h1>
         <p class="subtitle">Sains Sosial MBPK</p>
+      </div>
+      <div class="mascot-zone home-budi-zone">
+        <div class="speech">Jom bertualang bersama Budi si Burung!</div>
+        ${mascot()}
+      </div>
+      <div class="home-menu-panel">
         <div class="menu-buttons">
           <button class="${classFor("green")}" data-action="single">Main Sendiri</button>
           <button class="${classFor("blue")}" data-action="two">Main Dengan Kawan</button>
-          <button class="${classFor("orange")}" data-action="chat">Tanya Budi</button>
+          <button class="${classFor("purple")}" data-action="chat">Tanya Budi</button>
+          <button class="${classFor("orange")}" data-action="help">Cara Main</button>
           <button class="${classFor("pink")}" data-action="mission">Peta Misi</button>
-          <button class="${classFor("purple")}" data-action="leader">Papan Skor</button>
-          <button class="${classFor("yellow")}" data-action="help">Cara Main</button>
+          <button class="${classFor("yellow")}" data-action="leader">Papan Skor</button>
         </div>
-      </div>
-      <div class="mascot-zone">
-        <div class="speech">Jom bertualang bersama Budi si Burung!</div>
-        ${mascot()}
       </div>
       <button class="sound-btn" data-action="sound">${state.sound ? "🔊" : "🔇"}</button>
     </section>
