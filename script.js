@@ -64,6 +64,7 @@ function markAssetLoaded(src) {
 }
 
 function markAssetMissing(src) {
+  console.warn("Asset gagal load:", src);
   document.documentElement.classList.add(`missing-${assetKey(src)}`);
 }
 
@@ -150,7 +151,7 @@ function classFor(color) {
 function imageWithFallback(src, alt, className, fallbackHtml = "") {
   return `
     <span class="asset-wrap ${className}-wrap">
-      <img class="asset-img ${className}" src="${src}" alt="${alt}" onload="this.closest('.asset-wrap').classList.add('asset-loaded')" onerror="this.hidden=true;this.nextElementSibling.hidden=false;this.closest('.asset-wrap').classList.add('asset-missing')" />
+      <img class="asset-img ${className}" src="${src}" alt="${alt}" onload="this.closest('.asset-wrap').classList.add('asset-loaded')" onerror="console.warn('Asset gagal load:', this.getAttribute('src'));this.hidden=true;this.nextElementSibling.hidden=false;this.closest('.asset-wrap').classList.add('asset-missing')" />
       <span class="asset-fallback ${className}-fallback" hidden>${fallbackHtml}</span>
     </span>
   `;
@@ -159,7 +160,7 @@ function imageWithFallback(src, alt, className, fallbackHtml = "") {
 function mascot() {
   return `
     <div class="mascot asset-mascot" aria-label="Budi si Burung">
-      <img class="asset-img budi-img" src="${ASSETS.characters.budi}" alt="Budi si Burung" onload="this.parentElement.classList.add('asset-loaded')" onerror="this.hidden=true;this.nextElementSibling.hidden=false;this.parentElement.classList.add('asset-missing')" />
+      <img class="asset-img budi-img" src="${ASSETS.characters.budi}" alt="Budi si Burung" onload="this.parentElement.classList.add('asset-loaded')" onerror="console.warn('Asset gagal load:', this.getAttribute('src'));this.hidden=true;this.nextElementSibling.hidden=false;this.parentElement.classList.add('asset-missing')" />
       <div class="budi-fallback" hidden>
         <div class="bird-body"></div>
         <div class="bird-belly"></div>
@@ -231,7 +232,7 @@ function renderGame() {
         ${data.objects.map((obj) => objectHtml(obj, nearby)).join("")}
         <div class="player" style="left:${state.player.x}%;top:${state.player.y}%">
           <div class="player-asset">
-            <img class="asset-img player-img" src="${ASSETS.characters.player}" alt="Watak pemain" onload="this.parentElement.classList.add('asset-loaded')" onerror="this.hidden=true;this.nextElementSibling.hidden=false;this.parentElement.classList.add('asset-missing')" />
+            <img class="asset-img player-img" src="${ASSETS.characters.player}" alt="Watak pemain" onload="this.parentElement.classList.add('asset-loaded')" onerror="console.warn('Asset gagal load:', this.getAttribute('src'));this.hidden=true;this.nextElementSibling.hidden=false;this.parentElement.classList.add('asset-missing')" />
             <div class="kid-character" hidden>
               <span class="kid-hair"></span><span class="kid-head"></span><span class="kid-body"></span><span class="kid-arm left"></span><span class="kid-arm right"></span><span class="kid-leg left"></span><span class="kid-leg right"></span>
             </div>
