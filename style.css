@@ -2210,3 +2210,174 @@ button {
     border-radius: 18px;
   }
 }
+
+/* Home screen positioning refinement: keep Budi clean and anchored. */
+.home.asset-home {
+  grid-template-columns: minmax(220px, .82fr) minmax(360px, 1.05fr) minmax(320px, .86fr);
+  grid-template-areas:
+    "title title menu"
+    "budi title menu";
+  align-items: center;
+  gap: clamp(10px, 2.2vw, 26px);
+  padding: clamp(18px, 2.5vw, 30px);
+}
+
+.home-copy {
+  align-self: center;
+  justify-self: center;
+  margin-top: 0;
+  transform: translateY(-4vh);
+}
+
+.home .hero-title {
+  max-width: 820px;
+  font-size: clamp(58px, 7.8vw, 110px);
+  text-wrap: balance;
+}
+
+.home .subtitle {
+  margin-top: 14px;
+  font-size: clamp(18px, 2.2vw, 28px);
+}
+
+.home-budi-zone {
+  align-self: end;
+  justify-self: start;
+  width: min(25vw, 250px);
+  min-height: 300px;
+  margin: 0 0 clamp(18px, 3vh, 34px) clamp(10px, 2vw, 28px);
+  display: block;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.home-budi-zone .mascot,
+.home-budi-zone .asset-mascot {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: clamp(150px, 20vw, 245px);
+  aspect-ratio: 1;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+  transform: rotate(-2deg);
+  filter: drop-shadow(0 14px 10px rgba(35, 52, 24, .26));
+}
+
+.home-budi-zone .budi-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  filter: none;
+}
+
+.home-budi-zone .speech {
+  left: clamp(126px, 16vw, 210px);
+  top: auto;
+  bottom: clamp(138px, 17vw, 210px);
+  width: min(310px, 28vw);
+  padding: 14px 16px;
+  border-width: 5px;
+  border-radius: 24px;
+  box-shadow: 0 9px 0 rgba(91, 55, 20, .2), 0 14px 18px rgba(44, 66, 31, .18);
+}
+
+.home-budi-zone .speech::after {
+  left: 26px;
+  bottom: -20px;
+  width: 28px;
+  height: 28px;
+}
+
+.home-menu-panel {
+  justify-self: end;
+  width: min(390px, 100%);
+  margin-right: clamp(4px, 2vw, 30px);
+}
+
+.home .menu-buttons {
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .home.asset-home {
+    grid-template-columns: minmax(210px, .8fr) minmax(300px, 1fr);
+    grid-template-areas:
+      "title title"
+      "budi menu";
+    gap: 12px;
+  }
+
+  .home-copy {
+    transform: none;
+  }
+
+  .home-budi-zone {
+    width: min(34vw, 245px);
+    min-height: 285px;
+  }
+
+  .home-budi-zone .speech {
+    left: 110px;
+    bottom: 150px;
+    width: min(280px, 42vw);
+  }
+
+  .home-menu-panel {
+    justify-self: center;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .home.asset-home {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "menu"
+      "budi";
+    align-content: start;
+    padding: 12px 12px 78px;
+  }
+
+  .home-copy {
+    transform: none;
+  }
+
+  .home .hero-title {
+    font-size: clamp(46px, 14vw, 70px);
+  }
+
+  .home-menu-panel {
+    width: min(360px, 96vw);
+  }
+
+  .home-budi-zone {
+    width: 100%;
+    min-height: 170px;
+    margin: 0;
+  }
+
+  .home-budi-zone .mascot,
+  .home-budi-zone .asset-mascot {
+    width: 128px;
+    left: 8px;
+  }
+
+  .home-budi-zone .speech {
+    left: 122px;
+    bottom: 74px;
+    width: calc(100vw - 150px);
+    padding: 10px 12px;
+    border-width: 4px;
+    font-size: 13px;
+  }
+}
