@@ -18,40 +18,79 @@ const state = {
   resultSaved: false
 };
 
+const ASSETS = {
+  backgrounds: {
+    home: "assets/backgrounds/home-bg.png",
+    stage1: "assets/backgrounds/stage1-map.png",
+    stage2: "assets/backgrounds/stage2-map.png",
+    stage3: "assets/backgrounds/stage3-map.png",
+    mission: "assets/backgrounds/mission-map.png"
+  },
+  characters: {
+    budi: "assets/characters/budi.png",
+    player: "assets/characters/player.png"
+  },
+  objects: {
+    kucing: "assets/objects/kucing.png",
+    ayam: "assets/objects/ayam.png",
+    ikan: "assets/objects/ikan.png",
+    pokokBunga: "assets/objects/pokok-bunga.png",
+    rumput: "assets/objects/rumput.png",
+    pokokPisang: "assets/objects/pokok-pisang.png",
+    arnab: "assets/objects/arnab.png",
+    burung: "assets/objects/burung.png",
+    bungaMatahari: "assets/objects/bunga-matahari.png",
+    pokokKecil: "assets/objects/pokok-kecil.png"
+  },
+  ui: {
+    woodPanel: "assets/ui/wood-panel.png",
+    questionPopup: "assets/ui/question-popup.png",
+    buttonGreen: "assets/ui/button-green.png",
+    buttonBlue: "assets/ui/button-blue.png",
+    buttonOrange: "assets/ui/button-orange.png"
+  },
+  badges: {
+    pemula: "assets/badges/pemula-alam.png",
+    penjaga: "assets/badges/penjaga-alam.png",
+    juara: "assets/badges/juara-alam.png"
+  }
+};
+
 const stageData = {
   1: {
     title: "Stage 1 - Laluan Kenal Alam",
     mapClass: "",
+    background: ASSETS.backgrounds.stage1,
     question: "Ini haiwan atau tumbuhan?",
     choices: ["Haiwan", "Tumbuhan"],
     objects: [
-      { id: "kucing", icon: "🐱", x: 28, y: 34, answer: "Haiwan", label: "Kucing" },
-      { id: "ayam", icon: "🐔", x: 72, y: 28, answer: "Haiwan", label: "Ayam" },
-      { id: "bunga", icon: "🌻", x: 54, y: 66, answer: "Tumbuhan", label: "Pokok bunga" },
-      { id: "rumput", icon: "🌿", x: 82, y: 78, answer: "Tumbuhan", label: "Rumput" }
+      { id: "kucing", icon: "&#128049;", image: ASSETS.objects.kucing, x: 28, y: 34, answer: "Haiwan", label: "Kucing" },
+      { id: "ayam", icon: "&#128020;", image: ASSETS.objects.ayam, x: 72, y: 28, answer: "Haiwan", label: "Ayam" },
+      { id: "bunga", icon: "&#127803;", image: ASSETS.objects.pokokBunga, x: 54, y: 66, answer: "Tumbuhan", label: "Pokok bunga" },
+      { id: "rumput", icon: "&#127807;", image: ASSETS.objects.rumput, x: 82, y: 78, answer: "Tumbuhan", label: "Rumput" }
     ]
   },
   2: {
     title: "Stage 2 - Hutan Ciri-Ciri",
     mapClass: "stage2",
+    background: ASSETS.backgrounds.stage2,
     question: "Apakah ciri yang sesuai?",
     choices: ["ada kaki", "ada sirip", "ada daun", "ada batang"],
     objects: [
-      { id: "kucing2", icon: "🐱", x: 25, y: 24, answer: "ada kaki", label: "Kucing" },
-      { id: "ikan", icon: "🐟", x: 75, y: 30, answer: "ada sirip", label: "Ikan" },
-      { id: "bunga2", icon: "🌷", x: 37, y: 72, answer: "ada daun", label: "Pokok bunga" },
-      { id: "pisang", icon: "🌴", x: 78, y: 74, answer: "ada batang", label: "Pokok pisang" }
+      { id: "kucing2", icon: "&#128049;", image: ASSETS.objects.kucing, x: 25, y: 24, answer: "ada kaki", label: "Kucing" },
+      { id: "ikan", icon: "&#128031;", image: ASSETS.objects.ikan, x: 75, y: 30, answer: "ada sirip", label: "Ikan" },
+      { id: "bunga2", icon: "&#127799;", image: ASSETS.objects.pokokBunga, x: 37, y: 72, answer: "ada daun", label: "Pokok bunga" },
+      { id: "pisang", icon: "&#127796;", image: ASSETS.objects.pokokPisang, x: 78, y: 74, answer: "ada batang", label: "Pokok pisang" }
     ]
   }
 };
 
 const sortItems = [
-  { id: "arnab", icon: "🐰", name: "Arnab", type: "Haiwan" },
-  { id: "burung", icon: "🐦", name: "Burung", type: "Haiwan" },
-  { id: "matahari", icon: "🌻", name: "Bunga matahari", type: "Tumbuhan" },
-  { id: "pokok", icon: "🌱", name: "Pokok kecil", type: "Tumbuhan" }
+  { id: "arnab", icon: "&#128048;", image: ASSETS.objects.arnab, name: "Arnab", type: "Haiwan" },
+  { id: "burung", icon: "&#128038;", image: ASSETS.objects.burung, name: "Burung", type: "Haiwan" },
+  { id: "matahari", icon: "&#127803;", image: ASSETS.objects.bungaMatahari, name: "Bunga matahari", type: "Tumbuhan" },
+  { id: "pokok", icon: "&#127793;", image: ASSETS.objects.pokokKecil, name: "Pokok kecil", type: "Tumbuhan" }
 ];
-
 function setScreen(screen) {
   state.screen = screen;
   render();
@@ -77,16 +116,28 @@ function classFor(color) {
   return `game-btn ${color}`;
 }
 
+function imageWithFallback(src, alt, className, fallbackHtml = "") {
+  return `
+    <span class="asset-wrap ${className}-wrap">
+      <img class="asset-img ${className}" src="${src}" alt="${alt}" onerror="this.hidden=true;this.nextElementSibling.hidden=false" />
+      <span class="asset-fallback ${className}-fallback" hidden>${fallbackHtml}</span>
+    </span>
+  `;
+}
+
 function mascot() {
   return `
-    <div class="mascot" aria-label="Budi si Burung">
-      <div class="bird-body"></div>
-      <div class="bird-belly"></div>
-      <div class="bird-wing"></div>
-      <div class="bird-eye left"></div>
-      <div class="bird-eye right"></div>
-      <div class="bird-beak"></div>
-      <div class="bird-feet"></div>
+    <div class="mascot asset-mascot" aria-label="Budi si Burung">
+      <img class="asset-img budi-img" src="${ASSETS.characters.budi}" alt="Budi si Burung" onerror="this.hidden=true;this.nextElementSibling.hidden=false" />
+      <div class="budi-fallback" hidden>
+        <div class="bird-body"></div>
+        <div class="bird-belly"></div>
+        <div class="bird-wing"></div>
+        <div class="bird-eye left"></div>
+        <div class="bird-eye right"></div>
+        <div class="bird-beak"></div>
+        <div class="bird-feet"></div>
+      </div>
     </div>
   `;
 }
@@ -94,7 +145,7 @@ function mascot() {
 function home() {
   app.className = "app-shell forest-bg";
   app.innerHTML = `
-    <section class="screen home">
+    <section class="screen home asset-home" style="--home-bg:url('${ASSETS.backgrounds.home}')">
       <div>
         <h1 class="hero-title">Misi Alam Ceria</h1>
         <p class="subtitle">Sains Sosial MBPK</p>
@@ -137,7 +188,7 @@ function renderGame() {
           <button class="small-btn" data-action="home">Menu</button>
         </div>
       </div>
-      <div class="game-map ${data.mapClass}">
+      <div class="game-map asset-map ${data.mapClass}" style="--stage-bg:url('${data.background}')">
         ${mapDecorations()}
         <div class="game-budi">
           <div class="mini-budi">${mascot()}</div>
@@ -146,8 +197,11 @@ function renderGame() {
         </div>
         ${data.objects.map((obj) => objectHtml(obj, nearby)).join("")}
         <div class="player" style="left:${state.player.x}%;top:${state.player.y}%">
-          <div class="kid-character">
-            <span class="kid-hair"></span><span class="kid-head"></span><span class="kid-body"></span><span class="kid-arm left"></span><span class="kid-arm right"></span><span class="kid-leg left"></span><span class="kid-leg right"></span>
+          <div class="player-asset">
+            <img class="asset-img player-img" src="${ASSETS.characters.player}" alt="Watak pemain" onerror="this.hidden=true;this.nextElementSibling.hidden=false" />
+            <div class="kid-character" hidden>
+              <span class="kid-hair"></span><span class="kid-head"></span><span class="kid-body"></span><span class="kid-arm left"></span><span class="kid-arm right"></span><span class="kid-leg left"></span><span class="kid-leg right"></span>
+            </div>
           </div>
           <div class="player-name">${state.playersMode ? state.players[state.currentPlayer].name : "Pemain"}</div>
         </div>
@@ -169,18 +223,20 @@ function renderGame() {
 
 function mapDecorations() {
   return `
-    <div class="sky-band"><span class="sun"></span><span class="cloud c1"></span><span class="cloud c2"></span></div>
-    <div class="path main-path"></div>
-    <div class="path side-path"></div>
-    <div class="river"><span class="bridge"></span></div>
-    <div class="hut"><span></span></div>
-    <div class="sign-board">Misi Alam</div>
-    <div class="fence fence-left"></div>
-    <div class="fence fence-right"></div>
-    ${["t1", "t2", "t3", "t4", "t5"].map((name) => `<div class="tree ${name}"><span></span></div>`).join("")}
-    ${["b1", "b2", "b3", "b4", "b5", "b6"].map((name) => `<div class="bush ${name}"></div>`).join("")}
-    ${["f1", "f2", "f3", "f4", "f5", "f6", "f7"].map((name) => `<div class="flower ${name}"></div>`).join("")}
-    ${["r1", "r2", "r3", "r4"].map((name) => `<div class="rock ${name}"></div>`).join("")}
+    <div class="css-map-fallback" aria-hidden="true">
+      <div class="sky-band"><span class="sun"></span><span class="cloud c1"></span><span class="cloud c2"></span></div>
+      <div class="path main-path"></div>
+      <div class="path side-path"></div>
+      <div class="river"><span class="bridge"></span></div>
+      <div class="hut"><span></span></div>
+      <div class="sign-board">Misi Alam</div>
+      <div class="fence fence-left"></div>
+      <div class="fence fence-right"></div>
+      ${["t1", "t2", "t3", "t4", "t5"].map((name) => `<div class="tree ${name}"><span></span></div>`).join("")}
+      ${["b1", "b2", "b3", "b4", "b5", "b6"].map((name) => `<div class="bush ${name}"></div>`).join("")}
+      ${["f1", "f2", "f3", "f4", "f5", "f6", "f7"].map((name) => `<div class="flower ${name}"></div>`).join("")}
+      ${["r1", "r2", "r3", "r4"].map((name) => `<div class="rock ${name}"></div>`).join("")}
+    </div>
   `;
 }
 
@@ -189,7 +245,9 @@ function objectHtml(obj, nearby) {
   const done = state.answered.has(obj.id);
   return `
     <div class="map-object ${ready} ${done ? "done" : ""}" style="left:${obj.x}%;top:${obj.y}%" title="${obj.label}">
-      <span class="object-icon">${done ? "&#10003;" : obj.icon}</span>
+      <span class="object-icon">
+        ${done ? "&#10003;" : imageWithFallback(obj.image, obj.label, "object-img", obj.icon)}
+      </span>
       <span class="object-label">${obj.label}</span>
     </div>
   `;
@@ -202,7 +260,7 @@ function questionModal(obj, data) {
       <div class="panel question-card">
         <button class="close-x" data-action="close-question">X</button>
         <div class="question-title">SOALAN</div>
-        <div class="question-icon">${obj.icon}</div>
+        <div class="question-icon">${imageWithFallback(obj.image, obj.label, "question-img", obj.icon)}</div>
         <h2>${obj.label}</h2>
         <h3>${data.question}</h3>
         <div class="answer-grid">
@@ -283,7 +341,7 @@ function mission() {
     ["4", "Taman Ceria (Final)", "🏅"]
   ];
   app.innerHTML = `
-    <section class="screen mission-wrap">
+    <section class="screen mission-wrap asset-mission" style="--mission-bg:url('${ASSETS.backgrounds.mission}')">
       <h1 class="screen-title">Peta Misi</h1>
       <div class="panel mission-map">
         ${stages.map(([num, label, icon]) => `
@@ -306,7 +364,7 @@ function stage3() {
   const animalCount = sortItems.filter((item) => item.type === "Haiwan" && state.sortingDone.has(item.id)).length;
   const plantCount = sortItems.filter((item) => item.type === "Tumbuhan" && state.sortingDone.has(item.id)).length;
   app.innerHTML = `
-    <section class="screen">
+    <section class="screen stage3-screen" style="--stage3-bg:url('${ASSETS.backgrounds.stage3}')">
       <div class="topbar">
         <div class="panel hud">Stage 3 - Pondok Susun Alam</div>
         <div class="hud-right">
@@ -325,7 +383,7 @@ function stage3() {
         <div class="sorting-items">
           ${sortItems.map((item) => `
             <button class="sort-item ${state.sortingDone.has(item.id) ? "done" : ""}" data-sort="${item.id}">
-              <span>${item.icon}</span><br />${item.name}
+              <span>${imageWithFallback(item.image, item.name, "sort-img", item.icon)}</span><br />${item.name}
             </button>
           `).join("")}
         </div>
@@ -429,12 +487,13 @@ function result() {
   app.className = "app-shell forest-bg";
   saveScore();
   const badge = getBadge(state.score);
+  const badgeImage = getBadgeImage(state.score);
   app.innerHTML = `
     <section class="screen result-wrap">
       <h1 class="screen-title">TAHNIAH!</h1>
       <div class="panel result-card">
         <h2>Jumlah markah: ${state.score} mata</h2>
-        <div class="badge">${badge}</div>
+        <div class="badge">${imageWithFallback(badgeImage, badge, "badge-img", badge)}</div>
         ${state.playersMode ? `<h3>${state.players[0].name}: ${state.players[0].score} mata<br />${state.players[1].name}: ${state.players[1].score} mata</h3>` : ""}
         <div class="back-row">
           <button class="${classFor("green")}" data-action="single">Main Semula</button>
@@ -450,6 +509,12 @@ function getBadge(score) {
   if (score >= 90) return "Lencana Juara Alam";
   if (score >= 60) return "Lencana Penjaga Alam";
   return "Lencana Pemula Alam";
+}
+
+function getBadgeImage(score) {
+  if (score >= 90) return ASSETS.badges.juara;
+  if (score >= 60) return ASSETS.badges.penjaga;
+  return ASSETS.badges.pemula;
 }
 
 function saveScore() {

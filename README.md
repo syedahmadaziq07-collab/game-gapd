@@ -9,6 +9,11 @@ Game pendidikan digital 2D adventure untuk murid MBPK bagi topik mengenal dan me
 - `script.js` - logik game, stage, chatbot, leaderboard dan localStorage.
 - `vercel.json` - konfigurasi deploy statik Vercel.
 - `package.json` - skrip semakan dan preview.
+- `assets/` - folder gambar untuk background, karakter, objek, UI dan lencana.
+
+## Asset Visual
+
+Kod sudah bersedia menggunakan PNG dalam folder `assets/`. Masukkan gambar sebenar mengikut nama dalam [assets/README.md](assets/README.md). Jika gambar belum ada, game masih jalan dengan fallback CSS/emoji.
 
 ## Jalankan Lokal
 
@@ -30,4 +35,3 @@ Import folder ini ke Vercel sebagai projek statik. Tetapan build boleh dibiarkan
 - Framework Preset: Other
 - Build Command: kosong
 - Output Directory: `.`
-

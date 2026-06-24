@@ -1589,3 +1589,217 @@ button {
     padding: 118px 8px 8px;
   }
 }
+
+/* Asset-ready skin. Drop PNG files into assets/ and these rules take over. */
+.asset-home {
+  background:
+    var(--home-bg) center / cover no-repeat,
+    radial-gradient(circle at 12% 12%, rgba(255, 255, 255, 0.65) 0 7%, transparent 8%),
+    linear-gradient(#7bd9ff 0 32%, #9be275 33% 64%, #6fc653 65%);
+}
+
+.asset-map.game-map {
+  aspect-ratio: 16 / 9;
+  width: min(1240px, 98vw);
+  height: auto;
+  min-height: 0;
+  max-height: calc(100vh - 106px);
+  background:
+    var(--stage-bg) center / cover no-repeat,
+    radial-gradient(circle at 14% 74%, rgba(255,255,255,.2) 0 2px, transparent 3px),
+    radial-gradient(circle at 23% 49%, rgba(255,255,255,.18) 0 2px, transparent 3px),
+    repeating-linear-gradient(35deg, rgba(255,255,255,.08) 0 2px, transparent 3px 20px),
+    linear-gradient(#8ee56c 0, #5ebe4d 100%);
+}
+
+.asset-map.game-map::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--stage-bg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.asset-map > * {
+  position: relative;
+}
+
+.css-map-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.asset-map .css-map-fallback {
+  display: none;
+}
+
+.asset-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.asset-wrap {
+  display: inline-grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.asset-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.asset-mascot .budi-img {
+  position: absolute;
+  inset: 0;
+  object-fit: contain;
+  z-index: 3;
+}
+
+.asset-mascot .budi-fallback {
+  position: absolute;
+  inset: 0;
+}
+
+.player-asset {
+  width: 86px;
+  height: 92px;
+  display: grid;
+  place-items: end center;
+}
+
+.player-img {
+  filter: drop-shadow(0 10px 6px rgba(46, 56, 31, .32));
+}
+
+.player-asset .kid-character:not([hidden]) {
+  display: block;
+}
+
+.object-img-wrap,
+.question-img-wrap,
+.sort-img-wrap,
+.badge-img-wrap {
+  display: inline-grid;
+  place-items: center;
+}
+
+.object-img-wrap {
+  width: 72px;
+  height: 60px;
+}
+
+.object-img-fallback {
+  font-size: 52px;
+}
+
+.question-img-wrap {
+  width: 118px;
+  height: 118px;
+}
+
+.question-img-fallback {
+  font-size: 86px;
+}
+
+.sort-img-wrap {
+  width: 76px;
+  height: 68px;
+  margin: 0 auto 6px;
+}
+
+.sort-img-fallback {
+  font-size: 46px;
+}
+
+.badge-img-wrap {
+  width: 138px;
+  height: 138px;
+}
+
+.badge-img-fallback {
+  padding: 12px;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.stage-board,
+.question-card.panel,
+.leader-wrap .panel,
+.chat-panel,
+.result-card,
+.two-card {
+  background-image:
+    linear-gradient(90deg, rgba(255,255,255,.12), transparent 28% 70%, rgba(255,255,255,.1)),
+    url("assets/ui/wood-panel.png"),
+    repeating-linear-gradient(90deg, #b87436 0 24px, #a9652e 25px 48px);
+  background-size: auto, cover, auto;
+  background-position: center;
+}
+
+.question-card.panel {
+  background-image:
+    url("assets/ui/question-popup.png"),
+    linear-gradient(90deg, rgba(255,255,255,.13), transparent 28% 70%, rgba(255,255,255,.12)),
+    repeating-linear-gradient(90deg, #c98139 0 24px, #a7652d 25px 48px);
+}
+
+.green {
+  background-image: url("assets/ui/button-green.png"), linear-gradient(#87df54, #36a73e);
+  background-size: cover;
+  background-position: center;
+}
+
+.blue {
+  background-image: url("assets/ui/button-blue.png"), linear-gradient(#5ccaff, #197bd8);
+  background-size: cover;
+  background-position: center;
+}
+
+.orange {
+  background-image: url("assets/ui/button-orange.png"), linear-gradient(#ffc75a, #ff812b);
+  background-size: cover;
+  background-position: center;
+}
+
+.asset-mission .mission-map {
+  background:
+    var(--mission-bg) center / cover no-repeat,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.09), transparent 28% 70%, rgba(255, 255, 255, 0.08)),
+    repeating-linear-gradient(90deg, #b87436 0 24px, #a9652e 25px 48px);
+}
+
+.stage3-screen {
+  background:
+    var(--stage3-bg) center / cover no-repeat,
+    linear-gradient(#7bd9ff 0 32%, #9be275 33% 64%, #6fc653 65%);
+}
+
+@media (max-width: 760px) {
+  .asset-map.game-map {
+    width: min(100%, calc((100vh - 136px) * 16 / 9));
+    max-height: calc(100vh - 136px);
+    min-height: 0;
+  }
+
+  .player-asset {
+    width: 66px;
+    height: 76px;
+  }
+
+  .object-img-wrap {
+    width: 54px;
+    height: 46px;
+  }
+}
