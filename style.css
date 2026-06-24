@@ -14,6 +14,748 @@
   font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
 }
 
+/* Visual refresh for the playable 2D adventure scene. */
+.adventure-screen {
+  padding: 76px 18px 18px;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.82) 0 46px, transparent 48px),
+    linear-gradient(#7bd8ff 0 38%, #b6ec72 39% 100%);
+}
+
+.adventure-screen::before {
+  content: "";
+  position: absolute;
+  inset: auto -4vw 0;
+  height: 28vh;
+  background:
+    radial-gradient(circle at 8% 75%, #2d8d3a 0 7%, transparent 7.4%),
+    radial-gradient(circle at 18% 55%, #49ba4c 0 9%, transparent 9.4%),
+    radial-gradient(circle at 33% 68%, #287a35 0 8%, transparent 8.4%),
+    radial-gradient(circle at 49% 52%, #53c654 0 10%, transparent 10.4%),
+    radial-gradient(circle at 67% 70%, #30913d 0 8%, transparent 8.4%),
+    radial-gradient(circle at 84% 55%, #51c250 0 9%, transparent 9.4%),
+    linear-gradient(transparent 0 35%, #61b944 36%);
+  pointer-events: none;
+}
+
+.adventure-screen .topbar {
+  top: 12px;
+  left: clamp(14px, 3vw, 36px);
+  right: clamp(14px, 3vw, 36px);
+}
+
+.stage-board {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-width: 6px;
+  border-radius: 18px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.16), transparent 28% 70%, rgba(255,255,255,.12)),
+    repeating-linear-gradient(90deg, #c9853d 0 18px, #a95f29 19px 38px);
+  box-shadow: 0 8px 0 #62330f, 0 15px 22px rgba(42, 76, 35, .25);
+}
+
+.stage-icon {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffde4d;
+  color: #8a4e12;
+  text-shadow: none;
+}
+
+.adventure-screen .hud-right {
+  pointer-events: auto;
+}
+
+.adventure-screen .hud-chip,
+.adventure-screen .small-btn {
+  min-height: 46px;
+  border: 4px solid rgba(255, 244, 168, .95);
+  background: linear-gradient(#ffe778, #f6a42a);
+  color: #59320d;
+  box-shadow: inset 0 5px 0 rgba(255,255,255,.28), 0 6px 0 rgba(95, 53, 16, .32);
+  text-shadow: none;
+}
+
+.adventure-screen .score-chip {
+  background: linear-gradient(#fff071, #ffbe2f);
+}
+
+.adventure-screen .heart-chip {
+  background: linear-gradient(#ff98aa, #f04d68);
+  color: white;
+}
+
+.adventure-screen .small-btn {
+  background: linear-gradient(#73ccff, #248fe9);
+  color: white;
+}
+
+.adventure-screen .game-map {
+  width: min(1180px, 98vw);
+  height: min(720px, calc(100vh - 104px));
+  min-height: 560px;
+  border: 13px solid #784315;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 14% 74%, rgba(255,255,255,.2) 0 2px, transparent 3px),
+    radial-gradient(circle at 23% 49%, rgba(255,255,255,.18) 0 2px, transparent 3px),
+    radial-gradient(circle at 72% 62%, rgba(255,255,255,.18) 0 2px, transparent 3px),
+    repeating-linear-gradient(35deg, rgba(255,255,255,.08) 0 2px, transparent 3px 20px),
+    linear-gradient(#8ee56c 0, #5ebe4d 100%);
+  box-shadow:
+    inset 0 0 0 6px #c9853d,
+    inset 0 0 0 12px rgba(255,244,173,.4),
+    0 18px 0 #5d330f,
+    0 28px 32px rgba(48, 73, 34, .32);
+}
+
+.adventure-screen .game-map.stage2 {
+  background:
+    radial-gradient(circle at 20% 32%, rgba(21,93,44,.22) 0 90px, transparent 92px),
+    radial-gradient(circle at 76% 28%, rgba(21,93,44,.24) 0 110px, transparent 112px),
+    repeating-linear-gradient(35deg, rgba(255,255,255,.06) 0 2px, transparent 3px 20px),
+    linear-gradient(#74cf5b, #3c9c40);
+}
+
+.sky-band {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 27%;
+  background: linear-gradient(#80d9ff, rgba(128, 217, 255, .12));
+  pointer-events: none;
+}
+
+.sun {
+  position: absolute;
+  top: 22px;
+  left: 34px;
+  width: 72px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff48b 0 42%, #ffd54b 43% 100%);
+  box-shadow: 0 0 0 12px rgba(255, 221, 76, .28);
+}
+
+.cloud {
+  position: absolute;
+  width: 118px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .9);
+  box-shadow: 32px -12px 0 8px rgba(255,255,255,.9), 68px 0 0 3px rgba(255,255,255,.9);
+}
+
+.cloud.c1 { top: 34px; left: 25%; }
+.cloud.c2 { top: 54px; right: 15%; transform: scale(.82); }
+
+.path {
+  position: absolute;
+  background: #c58b51;
+  border: 5px solid rgba(117, 70, 30, .38);
+  box-shadow: inset 0 4px 0 rgba(255,255,255,.18), 0 8px 12px rgba(77, 62, 35, .18);
+  pointer-events: none;
+}
+
+.main-path {
+  left: 10%;
+  top: 32%;
+  width: 78%;
+  height: 34%;
+  border-radius: 45% 55% 42% 58%;
+  clip-path: polygon(0 48%, 18% 24%, 38% 37%, 54% 18%, 73% 34%, 100% 24%, 94% 62%, 76% 78%, 55% 62%, 38% 83%, 17% 68%, 0 82%);
+}
+
+.side-path {
+  left: 37%;
+  top: 48%;
+  width: 25%;
+  height: 43%;
+  border-radius: 45%;
+  transform: rotate(12deg);
+}
+
+.river {
+  position: absolute;
+  right: 0;
+  top: 30%;
+  width: 21%;
+  height: 66%;
+  background:
+    repeating-linear-gradient(160deg, rgba(255,255,255,.35) 0 8px, transparent 9px 24px),
+    linear-gradient(100deg, #63d8ff, #168bd8);
+  border-left: 7px solid rgba(31, 101, 142, .35);
+  border-radius: 48% 0 0 44%;
+  box-shadow: inset 8px 0 0 rgba(255,255,255,.18);
+}
+
+.bridge {
+  position: absolute;
+  left: -22%;
+  top: 46%;
+  width: 96px;
+  height: 62px;
+  border-radius: 12px;
+  background: repeating-linear-gradient(90deg, #b87534 0 15px, #8f541f 16px 21px);
+  border: 5px solid #714016;
+  transform: rotate(-8deg);
+  box-shadow: 0 8px 0 rgba(73, 47, 20, .25);
+}
+
+.hut {
+  position: absolute;
+  left: 8%;
+  top: 18%;
+  width: 116px;
+  height: 88px;
+  background: #d9974b;
+  border: 5px solid #704016;
+  border-radius: 14px;
+  box-shadow: 0 10px 0 rgba(79, 49, 18, .2);
+}
+
+.hut::before {
+  content: "";
+  position: absolute;
+  left: -13px;
+  right: -13px;
+  top: -42px;
+  height: 58px;
+  background: #8a4d1d;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.hut span {
+  position: absolute;
+  left: 42px;
+  bottom: 0;
+  width: 32px;
+  height: 46px;
+  border-radius: 12px 12px 0 0;
+  background: #5b3514;
+}
+
+.sign-board {
+  position: absolute;
+  left: 18%;
+  top: 52%;
+  padding: 8px 13px;
+  border: 4px solid #6c3c14;
+  border-radius: 12px;
+  background: linear-gradient(#ce8a41, #9c5b24);
+  color: #fff8d7;
+  font-weight: 950;
+  transform: rotate(-5deg);
+  box-shadow: 0 8px 0 rgba(82, 52, 20, .22);
+  z-index: 1;
+}
+
+.sign-board::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 9px;
+  height: 42px;
+  background: #6c3c14;
+  transform: translateX(-50%);
+}
+
+.fence {
+  position: absolute;
+  height: 42px;
+  background:
+    linear-gradient(90deg, #865020 0 10px, transparent 10px 31px) repeat-x,
+    linear-gradient(#9e612b 0 10px, transparent 10px 25px, #9e612b 25px 35px);
+  background-size: 31px 42px, 100% 42px;
+  opacity: .95;
+}
+
+.fence-left { left: 4%; bottom: 10%; width: 230px; transform: rotate(4deg); }
+.fence-right { right: 17%; top: 18%; width: 210px; transform: rotate(-5deg); }
+
+.tree,
+.bush,
+.flower,
+.rock {
+  position: absolute;
+  pointer-events: none;
+}
+
+.tree {
+  width: 78px;
+  height: 115px;
+  z-index: 1;
+  filter: drop-shadow(0 10px 5px rgba(48, 75, 35, .25));
+}
+
+.tree::before {
+  content: "";
+  position: absolute;
+  left: 31px;
+  bottom: 0;
+  width: 17px;
+  height: 58px;
+  border-radius: 9px;
+  background: #8a5222;
+}
+
+.tree span,
+.tree::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: #2f9e3e;
+}
+
+.tree span {
+  left: 2px;
+  top: 9px;
+  width: 74px;
+  height: 67px;
+  box-shadow: 20px 18px 0 #43bd4d, -12px 23px 0 #44b747;
+}
+
+.tree::after {
+  left: 22px;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  background: #58ca55;
+}
+
+.t1 { left: 5%; top: 36%; }
+.t2 { left: 24%; top: 14%; transform: scale(.9); }
+.t3 { left: 47%; top: 12%; transform: scale(1.05); }
+.t4 { right: 24%; top: 11%; transform: scale(.88); }
+.t5 { right: 7%; bottom: 10%; transform: scale(1.08); }
+
+.bush {
+  width: 78px;
+  height: 42px;
+  border-radius: 50px 50px 18px 18px;
+  background: radial-gradient(circle at 20% 60%, #53c653 0 24px, transparent 25px), radial-gradient(circle at 50% 38%, #2e9b3b 0 29px, transparent 30px), radial-gradient(circle at 78% 60%, #48b84b 0 24px, transparent 25px);
+  filter: drop-shadow(0 8px 4px rgba(46, 88, 35, .22));
+}
+
+.b1 { left: 14%; bottom: 25%; }
+.b2 { left: 34%; top: 24%; }
+.b3 { left: 61%; bottom: 18%; }
+.b4 { right: 8%; top: 47%; }
+.b5 { left: 4%; bottom: 4%; }
+.b6 { right: 31%; top: 32%; }
+
+.flower {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ff6e9f;
+  box-shadow: 13px 0 #ffd84c, 7px 12px #fff0a2, 0 20px 0 -7px #2c9a3b;
+}
+
+.f1 { left: 18%; top: 76%; }
+.f2 { left: 31%; top: 48%; }
+.f3 { left: 43%; top: 82%; }
+.f4 { left: 63%; top: 46%; }
+.f5 { left: 71%; top: 68%; }
+.f6 { right: 10%; top: 24%; }
+.f7 { left: 9%; top: 59%; }
+
+.rock {
+  width: 44px;
+  height: 28px;
+  border-radius: 50% 45% 44% 50%;
+  background: linear-gradient(#c9c9bd, #8d9389);
+  border: 3px solid rgba(91, 96, 86, .45);
+  box-shadow: 0 6px 0 rgba(60, 72, 54, .18);
+}
+
+.r1 { left: 41%; top: 35%; }
+.r2 { left: 69%; top: 83%; }
+.r3 { right: 25%; top: 43%; }
+.r4 { left: 11%; top: 45%; }
+
+.game-budi {
+  position: absolute;
+  left: 18px;
+  bottom: 182px;
+  width: 268px;
+  min-height: 92px;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 9px;
+  align-items: center;
+  padding: 10px;
+  border: 5px solid #714016;
+  border-radius: 24px;
+  background: rgba(255, 248, 216, .94);
+  box-shadow: 0 10px 0 rgba(91, 55, 20, .24), 0 14px 24px rgba(44, 66, 31, .22);
+}
+
+.mini-budi {
+  width: 74px;
+  height: 74px;
+  overflow: hidden;
+}
+
+.mini-budi .mascot {
+  width: 74px;
+}
+
+.budi-tip {
+  color: #4b300f;
+  font-size: 15px;
+  font-weight: 950;
+  line-height: 1.12;
+}
+
+.budi-game-btn {
+  grid-column: 2;
+  min-height: 34px;
+  border: 3px solid white;
+  border-radius: 999px;
+  background: linear-gradient(#5fc7ff, #1686df);
+  color: white;
+  font-weight: 950;
+  box-shadow: 0 5px 0 #0c5c9d;
+}
+
+.adventure-screen .player {
+  width: 82px;
+  height: 116px;
+  z-index: 5;
+  filter: drop-shadow(0 10px 6px rgba(46, 56, 31, .32));
+}
+
+.kid-character {
+  position: relative;
+  width: 72px;
+  height: 86px;
+  margin: 0 auto;
+}
+
+.kid-head {
+  position: absolute;
+  left: 16px;
+  top: 10px;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #5e3715;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 45%, #29313c 0 3px, transparent 4px),
+    radial-gradient(circle at 66% 45%, #29313c 0 3px, transparent 4px),
+    radial-gradient(ellipse at 50% 72%, #d9765d 0 8%, transparent 9%),
+    #ffd0a6;
+  z-index: 2;
+}
+
+.kid-hair {
+  position: absolute;
+  left: 15px;
+  top: 3px;
+  width: 43px;
+  height: 25px;
+  border-radius: 60% 60% 35% 35%;
+  background: #513014;
+  z-index: 3;
+}
+
+.kid-body {
+  position: absolute;
+  left: 13px;
+  top: 46px;
+  width: 46px;
+  height: 36px;
+  border: 4px solid #124f83;
+  border-radius: 16px 16px 13px 13px;
+  background: linear-gradient(#5dccff, #147bd0);
+}
+
+.kid-arm,
+.kid-leg {
+  position: absolute;
+  border-radius: 99px;
+  background: #ffd0a6;
+  border: 3px solid #6c3c16;
+}
+
+.kid-arm {
+  top: 52px;
+  width: 15px;
+  height: 34px;
+}
+
+.kid-arm.left { left: 2px; transform: rotate(18deg); }
+.kid-arm.right { right: 2px; transform: rotate(-18deg); }
+
+.kid-leg {
+  top: 76px;
+  width: 16px;
+  height: 28px;
+  background: #2a6da8;
+}
+
+.kid-leg.left { left: 18px; }
+.kid-leg.right { right: 18px; }
+
+.player-name {
+  max-width: 110px;
+  margin: -2px auto 0;
+  padding: 4px 9px;
+  border: 3px solid #fff4a8;
+  border-radius: 999px;
+  background: linear-gradient(#80dc58, #2e9d3b);
+  color: white;
+  font-size: 13px;
+  font-weight: 950;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 5px 0 rgba(61, 49, 16, .22);
+}
+
+.adventure-screen .map-object {
+  width: 128px;
+  height: 118px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  border: 6px solid #fff4ad;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,255,255,.75), transparent 24%),
+    linear-gradient(#fffbe0, #ffd76e);
+  box-shadow: 0 10px 0 rgba(120, 70, 23, .28), 0 15px 18px rgba(58, 75, 38, .24);
+}
+
+.object-icon {
+  font-size: 52px;
+  line-height: 1;
+}
+
+.object-label {
+  max-width: 108px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #3ca946;
+  color: white;
+  font-size: 14px;
+  font-weight: 950;
+  text-align: center;
+}
+
+.adventure-screen .map-object.ready {
+  outline: 7px solid rgba(255, 230, 71, .95);
+  animation: objectPulse 1s ease-in-out infinite;
+}
+
+.adventure-screen .map-object.done {
+  background: linear-gradient(#dbffd2, #85dc5d);
+}
+
+@keyframes objectPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.08); }
+}
+
+.adventure-screen .dpad {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  width: 156px;
+  height: 156px;
+  padding: 13px;
+  border: 6px solid rgba(255, 244, 173, .82);
+  border-radius: 50%;
+  background: rgba(41, 89, 57, .34);
+  backdrop-filter: blur(5px);
+  box-shadow: inset 0 4px 0 rgba(255,255,255,.22), 0 10px 18px rgba(42, 57, 31, .24);
+}
+
+.adventure-screen .dpad button {
+  border-width: 3px;
+  border-radius: 18px;
+  background: linear-gradient(#fff173, #f5a32a);
+  color: #643b11;
+  font-size: 24px;
+}
+
+.adventure-screen .mini-map {
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  width: 176px;
+  height: 124px;
+  border: 7px solid #724015;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at var(--mini-x, 48%) var(--mini-y, 56%), #ff304d 0 7px, #fff 8px 10px, transparent 11px),
+    linear-gradient(115deg, transparent 0 42%, rgba(167, 99, 43, .72) 43% 52%, transparent 53%),
+    radial-gradient(circle at 18% 24%, #348f42 0 13%, transparent 14%),
+    radial-gradient(circle at 75% 68%, #49af48 0 15%, transparent 16%),
+    linear-gradient(#a6e86b, #4fb14b);
+  box-shadow: 0 9px 0 rgba(81, 48, 17, .28), var(--shadow);
+}
+
+.mini-title {
+  position: absolute;
+  left: 9px;
+  top: 7px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255,248,216,.9);
+  color: #4d310e;
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.modal-backdrop {
+  background: rgba(18, 45, 31, .56);
+  backdrop-filter: blur(5px);
+}
+
+.question-card {
+  border-width: 8px;
+  border-radius: 30px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.13), transparent 28% 70%, rgba(255,255,255,.12)),
+    repeating-linear-gradient(90deg, #c98139 0 24px, #a7652d 25px 48px);
+  box-shadow: 0 16px 0 rgba(91, 53, 18, .32), 0 28px 38px rgba(15, 37, 23, .3);
+}
+
+.question-card h2,
+.question-card h3 {
+  color: #fff8dc;
+  font-size: clamp(22px, 4vw, 34px);
+}
+
+.question-title {
+  box-shadow: 0 7px 0 rgba(100, 56, 15, .28);
+}
+
+.question-icon {
+  width: 148px;
+  height: 148px;
+  border-radius: 36px;
+  font-size: 86px;
+  box-shadow: inset 0 6px 0 rgba(255,255,255,.58), 0 10px 0 rgba(89, 55, 20, .24);
+}
+
+.close-x {
+  background: linear-gradient(#ff8288, #e93347);
+  box-shadow: 0 6px 0 #9f1e2d;
+}
+
+@media (max-width: 760px) {
+  .adventure-screen {
+    padding: 118px 8px 8px;
+  }
+
+  .adventure-screen .game-map {
+    height: calc(100vh - 132px);
+    min-height: 500px;
+    border-width: 9px;
+  }
+
+  .adventure-screen .topbar {
+    gap: 8px;
+  }
+
+  .adventure-screen .hud {
+    font-size: 14px;
+    min-height: 44px;
+  }
+
+  .adventure-screen .hud-right {
+    justify-content: flex-start;
+  }
+
+  .adventure-screen .hud-chip,
+  .adventure-screen .small-btn {
+    min-height: 38px;
+    padding: 6px 9px;
+    font-size: 13px;
+  }
+
+  .game-budi {
+    left: 10px;
+    bottom: 154px;
+    width: 210px;
+    grid-template-columns: 54px 1fr;
+    padding: 8px;
+  }
+
+  .mini-budi,
+  .mini-budi .mascot {
+    width: 54px;
+    height: 54px;
+  }
+
+  .budi-tip {
+    font-size: 12px;
+  }
+
+  .adventure-screen .map-object {
+    width: 96px;
+    height: 92px;
+    border-width: 4px;
+    border-radius: 23px;
+  }
+
+  .object-icon {
+    font-size: 40px;
+  }
+
+  .object-label {
+    max-width: 84px;
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+
+  .adventure-screen .player {
+    width: 70px;
+    height: 104px;
+  }
+
+  .kid-character {
+    transform: scale(.86);
+    transform-origin: center bottom;
+  }
+
+  .adventure-screen .dpad {
+    left: 10px;
+    bottom: 10px;
+    width: 132px;
+    height: 132px;
+    padding: 10px;
+  }
+
+  .adventure-screen .mini-map {
+    right: 10px;
+    bottom: 10px;
+    width: 126px;
+    height: 92px;
+  }
+
+  .hut,
+  .sign-board,
+  .fence-right,
+  .cloud.c2 {
+    display: none;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -798,5 +1540,52 @@ button {
 
   .topbar {
     flex-direction: column;
+  }
+}
+
+/* Final gameplay overrides placed last so the adventure skin wins over base UI. */
+.screen.adventure-screen {
+  padding: 76px 18px 18px;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.82) 0 46px, transparent 48px),
+    linear-gradient(#7bd8ff 0 38%, #b6ec72 39% 100%);
+}
+
+.screen.adventure-screen.map-area {
+  padding-top: 76px;
+}
+
+.adventure-screen .modal-backdrop,
+.modal-backdrop {
+  background: rgba(18, 45, 31, .56);
+  backdrop-filter: blur(5px);
+}
+
+.question-card.panel {
+  border-width: 8px;
+  border-radius: 30px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.13), transparent 28% 70%, rgba(255,255,255,.12)),
+    repeating-linear-gradient(90deg, #c98139 0 24px, #a7652d 25px 48px);
+  box-shadow: 0 16px 0 rgba(91, 53, 18, .32), 0 28px 38px rgba(15, 37, 23, .3);
+}
+
+.question-card .question-icon {
+  width: 148px;
+  height: 148px;
+  border-radius: 36px;
+  font-size: 86px;
+  box-shadow: inset 0 6px 0 rgba(255,255,255,.58), 0 10px 0 rgba(89, 55, 20, .24);
+}
+
+.question-card .close-x {
+  background: linear-gradient(#ff8288, #e93347);
+  box-shadow: 0 6px 0 #9f1e2d;
+}
+
+@media (max-width: 760px) {
+  .screen.adventure-screen,
+  .screen.adventure-screen.map-area {
+    padding: 118px 8px 8px;
   }
 }

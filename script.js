@@ -122,12 +122,12 @@ function renderGame() {
   state.activeObject = nearby;
   app.className = "app-shell";
   app.innerHTML = `
-    <section class="screen map-area">
+    <section class="screen map-area adventure-screen">
       <div class="topbar">
-        <div class="panel hud">${data.title}</div>
+        <div class="panel hud stage-board"><span class="stage-icon">&#9733;</span>${data.title}</div>
         <div class="hud-right">
-          <span class="hud-chip">Skor: ${state.score}</span>
-          <span class="hud-chip">Hati: ${"❤️".repeat(state.hearts)}</span>
+          <span class="hud-chip score-chip"><span>&#9733;</span> Skor: ${state.score}</span>
+          <span class="hud-chip heart-chip"><span>&#9829;</span> Peluang: ${state.hearts}</span>
           ${state.playersMode ? `
             <span class="hud-chip">Giliran: ${state.players[state.currentPlayer].name}</span>
             <span class="hud-chip">${state.players[0].name}: ${state.players[0].score}</span>
@@ -138,26 +138,61 @@ function renderGame() {
         </div>
       </div>
       <div class="game-map ${data.mapClass}">
+        ${mapDecorations()}
+        <div class="game-budi">
+          <div class="mini-budi">${mascot()}</div>
+          <div class="budi-tip">Jom dekati objek dan jawab soalan!</div>
+          <button class="budi-game-btn" data-action="chat">Tanya Budi</button>
+        </div>
         ${data.objects.map((obj) => objectHtml(obj, nearby)).join("")}
-        <div class="player" style="left:${state.player.x}%;top:${state.player.y}%">🧒</div>
+        <div class="player" style="left:${state.player.x}%;top:${state.player.y}%">
+          <div class="kid-character">
+            <span class="kid-hair"></span><span class="kid-head"></span><span class="kid-body"></span><span class="kid-arm left"></span><span class="kid-arm right"></span><span class="kid-leg left"></span><span class="kid-leg right"></span>
+          </div>
+          <div class="player-name">${state.playersMode ? state.players[state.currentPlayer].name : "Pemain"}</div>
+        </div>
+        <div class="dpad" aria-label="Controller sentuh">
+          <button class="up" data-move="up">&#9650;</button>
+          <button class="left" data-move="left">&#9664;</button>
+          <button class="center" data-action="ask">&#9679;</button>
+          <button class="right" data-move="right">&#9654;</button>
+          <button class="down" data-move="down">&#9660;</button>
+        </div>
+        <div class="mini-map" style="--mini-x:${state.player.x}%;--mini-y:${state.player.y}%">
+          <span class="mini-title">Peta</span>
+        </div>
       </div>
-      <div class="dpad" aria-label="Controller sentuh">
-        <button class="up" data-move="up">▲</button>
-        <button class="left" data-move="left">◀</button>
-        <button class="center" data-action="ask">●</button>
-        <button class="right" data-move="right">▶</button>
-        <button class="down" data-move="down">▼</button>
-      </div>
-      <div class="mini-map" style="--mini-x:${state.player.x}%;--mini-y:${state.player.y}%"></div>
     </section>
     ${nearby ? questionModal(nearby, data) : ""}
   `;
 }
 
+function mapDecorations() {
+  return `
+    <div class="sky-band"><span class="sun"></span><span class="cloud c1"></span><span class="cloud c2"></span></div>
+    <div class="path main-path"></div>
+    <div class="path side-path"></div>
+    <div class="river"><span class="bridge"></span></div>
+    <div class="hut"><span></span></div>
+    <div class="sign-board">Misi Alam</div>
+    <div class="fence fence-left"></div>
+    <div class="fence fence-right"></div>
+    ${["t1", "t2", "t3", "t4", "t5"].map((name) => `<div class="tree ${name}"><span></span></div>`).join("")}
+    ${["b1", "b2", "b3", "b4", "b5", "b6"].map((name) => `<div class="bush ${name}"></div>`).join("")}
+    ${["f1", "f2", "f3", "f4", "f5", "f6", "f7"].map((name) => `<div class="flower ${name}"></div>`).join("")}
+    ${["r1", "r2", "r3", "r4"].map((name) => `<div class="rock ${name}"></div>`).join("")}
+  `;
+}
+
 function objectHtml(obj, nearby) {
   const ready = nearby && nearby.id === obj.id ? "ready" : "";
-  const done = state.answered.has(obj.id) ? "✓" : obj.icon;
-  return `<div class="map-object ${ready}" style="left:${obj.x}%;top:${obj.y}%" title="${obj.label}">${done}</div>`;
+  const done = state.answered.has(obj.id);
+  return `
+    <div class="map-object ${ready} ${done ? "done" : ""}" style="left:${obj.x}%;top:${obj.y}%" title="${obj.label}">
+      <span class="object-icon">${done ? "&#10003;" : obj.icon}</span>
+      <span class="object-label">${obj.label}</span>
+    </div>
+  `;
 }
 
 function questionModal(obj, data) {
@@ -178,7 +213,6 @@ function questionModal(obj, data) {
     </div>
   `;
 }
-
 function getNearbyObject(data) {
   return data.objects.find((obj) => {
     const dx = obj.x - state.player.x;
