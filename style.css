@@ -1939,6 +1939,101 @@ button {
   background: transparent;
 }
 
+/* Gameplay asset layer fix: keep absolute actors above the map image. */
+.asset-map.game-map {
+  isolation: isolate;
+}
+
+.asset-map.game-map::before,
+.asset-map .css-map-fallback {
+  z-index: 0;
+}
+
+.asset-map.game-map .map-object {
+  position: absolute;
+  z-index: 20;
+}
+
+.asset-map.game-map .map-object.ready {
+  z-index: 24;
+}
+
+.asset-map.game-map .player {
+  position: absolute;
+  z-index: 32;
+  width: clamp(82px, 8vw, 118px);
+  height: clamp(108px, 10vw, 150px);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.asset-map.game-map .player-asset {
+  width: 100%;
+  height: calc(100% - 24px);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.asset-map.game-map .player-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  filter: drop-shadow(0 10px 6px rgba(35, 48, 24, .34));
+}
+
+.asset-map.game-map .game-budi {
+  position: absolute;
+  z-index: 28;
+}
+
+.asset-map.game-map .dpad,
+.asset-map.game-map .mini-map {
+  position: absolute;
+  z-index: 40;
+}
+
+.asset-map.game-map .map-object,
+.asset-map.game-map .object-icon,
+.asset-map.game-map .object-img-wrap,
+.asset-map.game-map .asset-wrap,
+.asset-map.game-map .asset-img {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.asset-map.game-map .object-img-wrap {
+  width: clamp(70px, 7.6vw, 106px);
+  height: clamp(58px, 6.2vw, 88px);
+}
+
+.asset-map.game-map .object-img {
+  object-fit: contain;
+  filter: drop-shadow(0 9px 5px rgba(38, 48, 27, .32));
+}
+
+.asset-map.game-map .object-label {
+  position: relative;
+  z-index: 2;
+}
+
+.asset-map.game-map .asset-missing .asset-fallback {
+  display: grid;
+}
+
+.modal-backdrop {
+  z-index: 100;
+}
+
+/* If checkerboard/white still appears, it is baked into the PNG itself, not this CSS. */
+
 @media (max-width: 760px) {
   .asset-map .map-object {
     width: 84px;
