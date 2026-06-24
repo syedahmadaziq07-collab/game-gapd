@@ -1,0 +1,14 @@
+{
+  "name": "misi-alam-ceria",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "npx serve .",
+    "check": "node --check script.js"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4",
+    "vercel": "^44.4.1"
+  }
+}

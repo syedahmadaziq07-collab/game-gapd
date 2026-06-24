@@ -1,0 +1,566 @@
+const app = document.querySelector("#app");
+
+const state = {
+  screen: "home",
+  stage: 1,
+  score: 0,
+  hearts: 3,
+  sound: true,
+  player: { x: 18, y: 78 },
+  activeObject: null,
+  answered: new Set(),
+  currentPlayer: 0,
+  players: [
+    { name: "Pemain 1", score: 0 },
+    { name: "Pemain 2", score: 0 }
+  ],
+  sortingDone: new Set(),
+  resultSaved: false
+};
+
+const stageData = {
+  1: {
+    title: "Stage 1 - Laluan Kenal Alam",
+    mapClass: "",
+    question: "Ini haiwan atau tumbuhan?",
+    choices: ["Haiwan", "Tumbuhan"],
+    objects: [
+      { id: "kucing", icon: "🐱", x: 28, y: 34, answer: "Haiwan", label: "Kucing" },
+      { id: "ayam", icon: "🐔", x: 72, y: 28, answer: "Haiwan", label: "Ayam" },
+      { id: "bunga", icon: "🌻", x: 54, y: 66, answer: "Tumbuhan", label: "Pokok bunga" },
+      { id: "rumput", icon: "🌿", x: 82, y: 78, answer: "Tumbuhan", label: "Rumput" }
+    ]
+  },
+  2: {
+    title: "Stage 2 - Hutan Ciri-Ciri",
+    mapClass: "stage2",
+    question: "Apakah ciri yang sesuai?",
+    choices: ["ada kaki", "ada sirip", "ada daun", "ada batang"],
+    objects: [
+      { id: "kucing2", icon: "🐱", x: 25, y: 24, answer: "ada kaki", label: "Kucing" },
+      { id: "ikan", icon: "🐟", x: 75, y: 30, answer: "ada sirip", label: "Ikan" },
+      { id: "bunga2", icon: "🌷", x: 37, y: 72, answer: "ada daun", label: "Pokok bunga" },
+      { id: "pisang", icon: "🌴", x: 78, y: 74, answer: "ada batang", label: "Pokok pisang" }
+    ]
+  }
+};
+
+const sortItems = [
+  { id: "arnab", icon: "🐰", name: "Arnab", type: "Haiwan" },
+  { id: "burung", icon: "🐦", name: "Burung", type: "Haiwan" },
+  { id: "matahari", icon: "🌻", name: "Bunga matahari", type: "Tumbuhan" },
+  { id: "pokok", icon: "🌱", name: "Pokok kecil", type: "Tumbuhan" }
+];
+
+function setScreen(screen) {
+  state.screen = screen;
+  render();
+}
+
+function resetRun() {
+  state.score = 0;
+  state.hearts = 3;
+  state.stage = 1;
+  state.player = { x: 18, y: 78 };
+  state.answered = new Set();
+  state.sortingDone = new Set();
+  state.resultSaved = false;
+}
+
+function startSingle(stage = 1) {
+  resetRun();
+  state.stage = stage;
+  setScreen(stage === 3 ? "stage3" : "game");
+}
+
+function classFor(color) {
+  return `game-btn ${color}`;
+}
+
+function mascot() {
+  return `
+    <div class="mascot" aria-label="Budi si Burung">
+      <div class="bird-body"></div>
+      <div class="bird-belly"></div>
+      <div class="bird-wing"></div>
+      <div class="bird-eye left"></div>
+      <div class="bird-eye right"></div>
+      <div class="bird-beak"></div>
+      <div class="bird-feet"></div>
+    </div>
+  `;
+}
+
+function home() {
+  app.className = "app-shell forest-bg";
+  app.innerHTML = `
+    <section class="screen home">
+      <div>
+        <h1 class="hero-title">Misi Alam Ceria</h1>
+        <p class="subtitle">Sains Sosial MBPK</p>
+        <div class="menu-buttons">
+          <button class="${classFor("green")}" data-action="single">Main Sendiri</button>
+          <button class="${classFor("blue")}" data-action="two">Main Dengan Kawan</button>
+          <button class="${classFor("orange")}" data-action="chat">Tanya Budi</button>
+          <button class="${classFor("pink")}" data-action="mission">Peta Misi</button>
+          <button class="${classFor("purple")}" data-action="leader">Papan Skor</button>
+          <button class="${classFor("yellow")}" data-action="help">Cara Main</button>
+        </div>
+      </div>
+      <div class="mascot-zone">
+        <div class="speech">Jom bertualang bersama Budi si Burung!</div>
+        ${mascot()}
+      </div>
+      <button class="sound-btn" data-action="sound">${state.sound ? "🔊" : "🔇"}</button>
+    </section>
+  `;
+}
+
+function renderGame() {
+  const data = stageData[state.stage];
+  const nearby = getNearbyObject(data);
+  state.activeObject = nearby;
+  app.className = "app-shell";
+  app.innerHTML = `
+    <section class="screen map-area">
+      <div class="topbar">
+        <div class="panel hud">${data.title}</div>
+        <div class="hud-right">
+          <span class="hud-chip">Skor: ${state.score}</span>
+          <span class="hud-chip">Hati: ${"❤️".repeat(state.hearts)}</span>
+          ${state.playersMode ? `
+            <span class="hud-chip">Giliran: ${state.players[state.currentPlayer].name}</span>
+            <span class="hud-chip">${state.players[0].name}: ${state.players[0].score}</span>
+            <span class="hud-chip">${state.players[1].name}: ${state.players[1].score}</span>
+          ` : ""}
+          <button class="small-btn" data-action="mission">Peta</button>
+          <button class="small-btn" data-action="home">Menu</button>
+        </div>
+      </div>
+      <div class="game-map ${data.mapClass}">
+        ${data.objects.map((obj) => objectHtml(obj, nearby)).join("")}
+        <div class="player" style="left:${state.player.x}%;top:${state.player.y}%">🧒</div>
+      </div>
+      <div class="dpad" aria-label="Controller sentuh">
+        <button class="up" data-move="up">▲</button>
+        <button class="left" data-move="left">◀</button>
+        <button class="center" data-action="ask">●</button>
+        <button class="right" data-move="right">▶</button>
+        <button class="down" data-move="down">▼</button>
+      </div>
+      <div class="mini-map" style="--mini-x:${state.player.x}%;--mini-y:${state.player.y}%"></div>
+    </section>
+    ${nearby ? questionModal(nearby, data) : ""}
+  `;
+}
+
+function objectHtml(obj, nearby) {
+  const ready = nearby && nearby.id === obj.id ? "ready" : "";
+  const done = state.answered.has(obj.id) ? "✓" : obj.icon;
+  return `<div class="map-object ${ready}" style="left:${obj.x}%;top:${obj.y}%" title="${obj.label}">${done}</div>`;
+}
+
+function questionModal(obj, data) {
+  if (state.answered.has(obj.id)) return "";
+  return `
+    <div class="modal-backdrop">
+      <div class="panel question-card">
+        <button class="close-x" data-action="close-question">X</button>
+        <div class="question-title">SOALAN</div>
+        <div class="question-icon">${obj.icon}</div>
+        <h2>${obj.label}</h2>
+        <h3>${data.question}</h3>
+        <div class="answer-grid">
+          ${data.choices.map((choice, index) => `<button class="${classFor(index % 2 ? "blue" : "green")}" data-answer="${choice}">${choice}</button>`).join("")}
+        </div>
+        <p class="feedback" id="feedback"></p>
+      </div>
+    </div>
+  `;
+}
+
+function getNearbyObject(data) {
+  return data.objects.find((obj) => {
+    const dx = obj.x - state.player.x;
+    const dy = obj.y - state.player.y;
+    return Math.hypot(dx, dy) < 11 && !state.answered.has(obj.id);
+  });
+}
+
+function movePlayer(dir) {
+  const step = 4;
+  if (dir === "up") state.player.y -= step;
+  if (dir === "down") state.player.y += step;
+  if (dir === "left") state.player.x -= step;
+  if (dir === "right") state.player.x += step;
+  state.player.x = Math.max(5, Math.min(95, state.player.x));
+  state.player.y = Math.max(8, Math.min(92, state.player.y));
+  renderGame();
+}
+
+function answer(choice) {
+  const obj = state.activeObject;
+  if (!obj) return;
+  const feedback = document.querySelector("#feedback");
+  if (choice === obj.answer) {
+    state.score += 10;
+    if (state.playersMode) state.players[state.currentPlayer].score += 10;
+    state.answered.add(obj.id);
+    feedback.textContent = "Bagus! Jawapan kamu betul.";
+    switchTurn();
+    setTimeout(nextAfterAnswer, 650);
+  } else {
+    state.hearts = Math.max(0, state.hearts - 1);
+    feedback.textContent = "Tidak mengapa. Cuba lagi.";
+    switchTurn();
+    if (state.hearts === 0) setTimeout(() => setScreen("result"), 650);
+  }
+}
+
+function switchTurn() {
+  if (!state.playersMode) return;
+  state.currentPlayer = state.currentPlayer === 0 ? 1 : 0;
+}
+
+function nextAfterAnswer() {
+  const data = stageData[state.stage];
+  if (state.answered.size >= data.objects.length) {
+    if (state.stage === 1) {
+      state.stage = 2;
+      state.player = { x: 18, y: 78 };
+      state.answered = new Set();
+      renderGame();
+      return;
+    }
+    if (state.stage === 2) {
+      setScreen("stage3");
+      return;
+    }
+  }
+  renderGame();
+}
+
+function mission() {
+  app.className = "app-shell forest-bg";
+  const stages = [
+    ["1", "Laluan Kenal Alam", "🐱"],
+    ["2", "Hutan Ciri-Ciri", "🌳"],
+    ["3", "Pondok Susun Alam", "🏕️"],
+    ["4", "Taman Ceria (Final)", "🏅"]
+  ];
+  app.innerHTML = `
+    <section class="screen mission-wrap">
+      <h1 class="screen-title">Peta Misi</h1>
+      <div class="panel mission-map">
+        ${stages.map(([num, label, icon]) => `
+          <div class="stage-dot">
+            <button data-stage="${num}">${icon}</button>
+            <span>${num}. ${label}</span>
+          </div>
+        `).join("")}
+      </div>
+      <div class="back-row">
+        <button class="${classFor("blue")}" data-action="home">Menu Utama</button>
+        <button class="${classFor("green")}" data-action="single">Mula Stage 1</button>
+      </div>
+    </section>
+  `;
+}
+
+function stage3() {
+  app.className = "app-shell forest-bg";
+  const animalCount = sortItems.filter((item) => item.type === "Haiwan" && state.sortingDone.has(item.id)).length;
+  const plantCount = sortItems.filter((item) => item.type === "Tumbuhan" && state.sortingDone.has(item.id)).length;
+  app.innerHTML = `
+    <section class="screen">
+      <div class="topbar">
+        <div class="panel hud">Stage 3 - Pondok Susun Alam</div>
+        <div class="hud-right">
+          <span class="hud-chip">Skor: ${state.score}</span>
+          ${state.playersMode ? `
+            <span class="hud-chip">Giliran: ${state.players[state.currentPlayer].name}</span>
+            <span class="hud-chip">${state.players[0].name}: ${state.players[0].score}</span>
+            <span class="hud-chip">${state.players[1].name}: ${state.players[1].score}</span>
+          ` : ""}
+          <button class="small-btn" data-action="home">Menu</button>
+        </div>
+      </div>
+      <div class="stage3-layout">
+        <div class="zone" data-zone="Haiwan"><h2>🐾 Zon Haiwan</h2><p>${animalCount} objek betul</p></div>
+        <div class="zone" data-zone="Tumbuhan"><h2>🌿 Zon Tumbuhan</h2><p>${plantCount} objek betul</p></div>
+        <div class="sorting-items">
+          ${sortItems.map((item) => `
+            <button class="sort-item ${state.sortingDone.has(item.id) ? "done" : ""}" data-sort="${item.id}">
+              <span>${item.icon}</span><br />${item.name}
+            </button>
+          `).join("")}
+        </div>
+      </div>
+      <div class="back-row">
+        <button class="${classFor("green")}" data-action="finish">Selesai Misi</button>
+      </div>
+    </section>
+  `;
+}
+
+function chooseSort(id) {
+  const item = sortItems.find((entry) => entry.id === id);
+  if (!item || state.sortingDone.has(id)) return;
+  const choice = window.prompt(`Hantar ${item.name} ke zon mana? Taip: Haiwan atau Tumbuhan`);
+  if (!choice) return;
+  if (choice.trim().toLowerCase() === item.type.toLowerCase()) {
+    state.score += 10;
+    if (state.playersMode) state.players[state.currentPlayer].score += 10;
+    switchTurn();
+    state.sortingDone.add(id);
+    if (state.sortingDone.size === sortItems.length) {
+      setTimeout(() => setScreen("result"), 300);
+    } else {
+      stage3();
+    }
+  } else {
+    window.alert("Tidak mengapa. Cuba lagi.");
+  }
+}
+
+function chat() {
+  app.className = "app-shell forest-bg";
+  app.innerHTML = `
+    <section class="screen chat-wrap">
+      <h1 class="screen-title">Tanya Budi</h1>
+      <div class="panel chat-panel">
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <div style="width:120px">${mascot()}</div>
+          <h2>Budi si Burung sedia membantu.</h2>
+        </div>
+        <div class="chat-log" id="chatLog">
+          <div class="msg budi">Hai! Tanya Budi tentang haiwan dan tumbuhan.</div>
+        </div>
+        <form class="chat-form" id="chatForm">
+          <input id="chatInput" placeholder="Tulis soalan kamu..." autocomplete="off" />
+          <button class="${classFor("orange")}" type="submit">Hantar</button>
+        </form>
+        <div class="quick-questions">
+          <button class="small-btn" data-quick="Apa itu haiwan?">Apa itu haiwan?</button>
+          <button class="small-btn" data-quick="Apa itu tumbuhan?">Apa itu tumbuhan?</button>
+          <button class="small-btn" data-quick="Macam mana nak beza haiwan dan tumbuhan?">Beza haiwan dan tumbuhan</button>
+        </div>
+      </div>
+      <div class="back-row"><button class="${classFor("blue")}" data-action="home">Menu Utama</button></div>
+    </section>
+  `;
+}
+
+function budiReply(text) {
+  const q = text.toLowerCase();
+  if (q.includes("haiwan")) return "Haiwan biasanya boleh bergerak dan ada kaki, sayap atau sirip.";
+  if (q.includes("tumbuhan")) return "Tumbuhan biasanya ada daun, batang dan akar.";
+  if (q.includes("beza")) return "Lihat cirinya. Haiwan boleh bergerak. Tumbuhan biasanya ada daun, batang dan akar.";
+  return "Budi cadangkan lihat ciri mudah: kaki, sirip, daun, batang dan akar.";
+}
+
+function addChat(text, sender) {
+  const log = document.querySelector("#chatLog");
+  const div = document.createElement("div");
+  div.className = `msg ${sender}`;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function leaderboard() {
+  app.className = "app-shell forest-bg";
+  const saved = JSON.parse(localStorage.getItem("misiAlamScores") || "[]");
+  const rows = [
+    { name: "Aiman", score: 90 },
+    { name: "Siti", score: 80 },
+    { name: "Danial", score: 70 },
+    { name: "Sara", score: 60 },
+    ...saved
+  ].sort((a, b) => b.score - a.score).slice(0, 8);
+  app.innerHTML = `
+    <section class="screen leader-wrap">
+      <h1 class="screen-title">Papan Pendahuluan</h1>
+      <div class="panel">
+        <ol class="leader-list">
+          ${rows.map((row) => `<li><span>${row.name}</span><span>${row.score} mata</span></li>`).join("")}
+        </ol>
+      </div>
+      <div class="back-row"><button class="${classFor("blue")}" data-action="home">Menu Utama</button></div>
+    </section>
+  `;
+}
+
+function result() {
+  app.className = "app-shell forest-bg";
+  saveScore();
+  const badge = getBadge(state.score);
+  app.innerHTML = `
+    <section class="screen result-wrap">
+      <h1 class="screen-title">TAHNIAH!</h1>
+      <div class="panel result-card">
+        <h2>Jumlah markah: ${state.score} mata</h2>
+        <div class="badge">${badge}</div>
+        ${state.playersMode ? `<h3>${state.players[0].name}: ${state.players[0].score} mata<br />${state.players[1].name}: ${state.players[1].score} mata</h3>` : ""}
+        <div class="back-row">
+          <button class="${classFor("green")}" data-action="single">Main Semula</button>
+          <button class="${classFor("blue")}" data-action="home">Menu Utama</button>
+          <button class="${classFor("purple")}" data-action="leader">Papan Skor</button>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function getBadge(score) {
+  if (score >= 90) return "Lencana Juara Alam";
+  if (score >= 60) return "Lencana Penjaga Alam";
+  return "Lencana Pemula Alam";
+}
+
+function saveScore() {
+  if (state.resultSaved) return;
+  const name = state.playersMode ? `${state.players[0].name} & ${state.players[1].name}` : "Pemain";
+  const existing = JSON.parse(localStorage.getItem("misiAlamScores") || "[]");
+  existing.push({ name, score: state.score });
+  localStorage.setItem("misiAlamScores", JSON.stringify(existing.slice(-20)));
+  state.resultSaved = true;
+}
+
+function twoPlayer() {
+  app.className = "app-shell forest-bg";
+  app.innerHTML = `
+    <section class="screen two-wrap">
+      <h1 class="screen-title">Main Dengan Kawan</h1>
+      <div class="panel two-card">
+        <div class="name-grid">
+          <input class="name-input" id="p1" placeholder="Nama Pemain 1" />
+          <div class="vs">VS</div>
+          <input class="name-input" id="p2" placeholder="Nama Pemain 2" />
+        </div>
+        <div class="back-row">
+          <button class="${classFor("green")}" data-action="start-two">Mula Giliran</button>
+          <button class="${classFor("blue")}" data-action="home">Menu Utama</button>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function help() {
+  app.className = "app-shell forest-bg";
+  app.innerHTML = `
+    <section class="screen result-wrap">
+      <h1 class="screen-title">Cara Main</h1>
+      <div class="panel result-card">
+        <h2>Gerakkan watak dengan arrow key atau D-pad. Dekati objek dan jawab soalan Budi. Kumpul mata untuk dapat lencana alam.</h2>
+        <div class="back-row">
+          <button class="${classFor("green")}" data-action="single">Mula Main</button>
+          <button class="${classFor("blue")}" data-action="home">Menu Utama</button>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function startTwo() {
+  const p1 = document.querySelector("#p1").value.trim() || "Pemain 1";
+  const p2 = document.querySelector("#p2").value.trim() || "Pemain 2";
+  resetRun();
+  state.playersMode = true;
+  state.players = [{ name: p1, score: 0 }, { name: p2, score: 0 }];
+  state.currentPlayer = 0;
+  setScreen("game");
+}
+
+function render() {
+  if (state.screen === "home") home();
+  if (state.screen === "game") renderGame();
+  if (state.screen === "mission") mission();
+  if (state.screen === "stage3") stage3();
+  if (state.screen === "chat") chat();
+  if (state.screen === "leader") leaderboard();
+  if (state.screen === "result") result();
+  if (state.screen === "two") twoPlayer();
+  if (state.screen === "help") help();
+}
+
+app.addEventListener("click", (event) => {
+  const target = event.target.closest("[data-action], [data-move], [data-answer], [data-stage], [data-sort], [data-quick]");
+  if (!target || !app.contains(target)) return;
+  const action = target.dataset.action;
+  const move = target.dataset.move;
+  const answerChoice = target.dataset.answer;
+  const stage = target.dataset.stage;
+  const sort = target.dataset.sort;
+  const quick = target.dataset.quick;
+
+  if (move) movePlayer(move);
+  if (answerChoice) answer(answerChoice);
+  if (sort) chooseSort(sort);
+  if (quick) {
+    addChat(quick, "user");
+    addChat(budiReply(quick), "budi");
+  }
+  if (stage) {
+    const stageNum = Number(stage);
+    if (stageNum <= 2) startSingle(stageNum);
+    if (stageNum === 3) {
+      resetRun();
+      setScreen("stage3");
+    }
+    if (stageNum === 4) setScreen("result");
+  }
+  if (!action) return;
+  if (action === "single") {
+    state.playersMode = false;
+    startSingle();
+  }
+  if (action === "two") setScreen("two");
+  if (action === "start-two") startTwo();
+  if (action === "chat") setScreen("chat");
+  if (action === "leader") setScreen("leader");
+  if (action === "mission") setScreen("mission");
+  if (action === "home") {
+    state.playersMode = false;
+    setScreen("home");
+  }
+  if (action === "help") setScreen("help");
+  if (action === "sound") {
+    state.sound = !state.sound;
+    render();
+  }
+  if (action === "close-question") {
+    state.player.x = Math.max(8, state.player.x - 8);
+    renderGame();
+  }
+  if (action === "ask" && state.activeObject) renderGame();
+  if (action === "finish") setScreen("result");
+});
+
+app.addEventListener("submit", (event) => {
+  if (event.target.id !== "chatForm") return;
+  event.preventDefault();
+  const input = document.querySelector("#chatInput");
+  const text = input.value.trim();
+  if (!text) return;
+  addChat(text, "user");
+  addChat(budiReply(text), "budi");
+  input.value = "";
+});
+
+window.addEventListener("keydown", (event) => {
+  if (state.screen !== "game") return;
+  const keys = {
+    ArrowUp: "up",
+    ArrowDown: "down",
+    ArrowLeft: "left",
+    ArrowRight: "right"
+  };
+  if (keys[event.key]) {
+    event.preventDefault();
+    movePlayer(keys[event.key]);
+  }
+});
+
+render();
