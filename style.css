@@ -1624,6 +1624,11 @@ button {
   z-index: 0;
 }
 
+.missing-assets-backgrounds-stage1-map-png .asset-map.game-map::before,
+.missing-assets-backgrounds-stage2-map-png .asset-map.game-map.stage2::before {
+  display: none;
+}
+
 .asset-map > * {
   position: relative;
 }
@@ -1639,11 +1644,20 @@ button {
   display: none;
 }
 
+.missing-assets-backgrounds-stage1-map-png .asset-map .css-map-fallback,
+.missing-assets-backgrounds-stage2-map-png .asset-map.stage2 .css-map-fallback {
+  display: block;
+}
+
 .asset-img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.asset-loaded .asset-fallback {
+  display: none;
 }
 
 .asset-wrap {
@@ -1673,8 +1687,8 @@ button {
 }
 
 .player-asset {
-  width: 86px;
-  height: 92px;
+  width: 104px;
+  height: 118px;
   display: grid;
   place-items: end center;
 }
@@ -1696,8 +1710,8 @@ button {
 }
 
 .object-img-wrap {
-  width: 72px;
-  height: 60px;
+  width: 92px;
+  height: 76px;
 }
 
 .object-img-fallback {
@@ -1705,8 +1719,8 @@ button {
 }
 
 .question-img-wrap {
-  width: 118px;
-  height: 118px;
+  width: 132px;
+  height: 132px;
 }
 
 .question-img-fallback {
@@ -1714,8 +1728,8 @@ button {
 }
 
 .sort-img-wrap {
-  width: 76px;
-  height: 68px;
+  width: 94px;
+  height: 82px;
   margin: 0 auto 6px;
 }
 
@@ -1724,8 +1738,8 @@ button {
 }
 
 .badge-img-wrap {
-  width: 138px;
-  height: 138px;
+  width: 164px;
+  height: 164px;
 }
 
 .badge-img-fallback {
@@ -1801,5 +1815,60 @@ button {
   .object-img-wrap {
     width: 54px;
     height: 46px;
+  }
+}
+
+/* Asset-first polish after real PNGs are present. */
+.asset-map .map-object {
+  width: 138px;
+  height: 126px;
+  background: rgba(255, 250, 214, .88);
+  backdrop-filter: blur(2px);
+}
+
+.asset-map .map-object .asset-img {
+  filter: drop-shadow(0 8px 5px rgba(47, 55, 28, .24));
+}
+
+.asset-map .object-label {
+  margin-top: 2px;
+  background: linear-gradient(#75d852, #2d9839);
+  border: 3px solid #fff1a4;
+  box-shadow: 0 4px 0 rgba(65, 45, 16, .22);
+}
+
+.asset-map .player {
+  width: 112px;
+  height: 148px;
+}
+
+.asset-map .player-name {
+  margin-top: -8px;
+}
+
+.game-budi .asset-mascot {
+  width: 76px;
+}
+
+.question-card .question-img-wrap .asset-img,
+.badge .badge-img-wrap .asset-img,
+.sort-item .sort-img-wrap .asset-img {
+  filter: drop-shadow(0 8px 6px rgba(62, 48, 23, .22));
+}
+
+@media (max-width: 760px) {
+  .asset-map .map-object {
+    width: 104px;
+    height: 98px;
+  }
+
+  .asset-map .player {
+    width: 78px;
+    height: 116px;
+  }
+
+  .player-asset {
+    width: 76px;
+    height: 88px;
   }
 }
