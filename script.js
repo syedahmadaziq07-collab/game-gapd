@@ -241,6 +241,7 @@ function home() {
       <div class="home-copy">
         <h1 class="hero-title">Misi Alam Ceria</h1>
         <p class="subtitle">Sains Sosial MBPK</p>
+        <p class="topic-badge">Mengenal dan Mengelaskan Haiwan dan Tumbuhan Berdasarkan Ciri Mudah</p>
       </div>
       <div class="mascot-zone home-budi-zone">
         <div class="speech">Jom bertualang bersama Budi si Burung!</div>
@@ -252,6 +253,7 @@ function home() {
           <button class="${classFor("blue")}" data-action="two">Main Dengan Kawan</button>
           <button class="${classFor("purple")}" data-action="chat">Tanya Budi</button>
           <button class="${classFor("orange")}" data-action="help">Cara Main</button>
+          <button class="${classFor("green")}" data-action="info">Info Projek</button>
           <button class="${classFor("pink")}" data-action="mission">Peta Misi</button>
           <button class="${classFor("yellow")}" data-action="leader">Papan Skor</button>
         </div>
@@ -644,13 +646,76 @@ function twoPlayer() {
 
 function help() {
   app.className = "app-shell forest-bg";
+  const steps = [
+    ["1", "Gerakkan watak menggunakan arrow key atau D-pad."],
+    ["2", "Dekati objek dalam peta."],
+    ["3", "Jawab soalan yang muncul."],
+    ["4", "Kumpul mata."],
+    ["5", "Selesaikan Stage 1 hingga Stage 3."],
+    ["6", "Dapatkan lencana."]
+  ];
   app.innerHTML = `
-    <section class="screen result-wrap">
+    <section class="screen info-wrap">
       <h1 class="screen-title">Cara Main</h1>
-      <div class="panel result-card">
-        <h2>Gerakkan watak dengan arrow key atau D-pad. Dekati objek dan jawab soalan Budi. Kumpul mata untuk dapat lencana alam.</h2>
+      <div class="panel info-card">
+        <div class="learning-tag">Belajar sambil bermain: haiwan, tumbuhan dan ciri mudah.</div>
+        <div class="how-grid">
+          ${steps.map(([num, text]) => `
+            <div class="how-step">
+              <span>${num}</span>
+              <p>${text}</p>
+            </div>
+          `).join("")}
+        </div>
         <div class="back-row">
           <button class="${classFor("green")}" data-action="single">Mula Main</button>
+          <button class="${classFor("purple")}" data-action="info">Info Projek</button>
+          <button class="${classFor("blue")}" data-action="home">Menu Utama</button>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function infoProject() {
+  app.className = "app-shell forest-bg";
+  const objectives = [
+    "Murid mengenal pasti haiwan dan tumbuhan melalui gambar.",
+    "Murid mengelaskan objek kepada kategori haiwan atau tumbuhan.",
+    "Murid mengecam ciri mudah seperti kaki, sirip, daun dan batang.",
+    "Murid belajar melalui gamifikasi yang mempunyai markah, lencana dan maklum balas."
+  ];
+  const checklist = [
+    "Stage 1, Stage 2 dan Stage 3",
+    "Sistem markah dan lencana",
+    "Papan pendahuluan localStorage",
+    "Maklum balas segera betul atau salah",
+    "Chatbot Tanya Budi",
+    "Mod Main Sendiri dan Main Dengan Kawan",
+    "Pengecaman corak ciri mudah",
+    "Reka bentuk mesra MBPK"
+  ];
+  app.innerHTML = `
+    <section class="screen info-wrap">
+      <h1 class="screen-title">Info Projek</h1>
+      <div class="panel info-card">
+        <div class="project-summary">
+          <div><strong>Nama game</strong><span>Misi Alam Ceria</span></div>
+          <div><strong>Subjek</strong><span>Sains Sosial MBPK</span></div>
+          <div><strong>Sasaran</strong><span>Murid Berkeperluan Pendidikan Khas</span></div>
+          <div><strong>Topik</strong><span>Mengenal dan Mengelaskan Haiwan dan Tumbuhan Berdasarkan Ciri Mudah</span></div>
+        </div>
+        <h2>Objektif</h2>
+        <ol class="objective-list">
+          ${objectives.map((item) => `<li>${item}</li>`).join("")}
+        </ol>
+        <h2>Elemen Tugasan 2 GAPD</h2>
+        <div class="spec-grid">
+          ${checklist.map((item) => `<span>${item}</span>`).join("")}
+        </div>
+        <div class="back-row">
+          <button class="${classFor("green")}" data-action="single">Main Sendiri</button>
+          <button class="${classFor("orange")}" data-action="help">Cara Main</button>
           <button class="${classFor("blue")}" data-action="home">Menu Utama</button>
         </div>
       </div>
@@ -678,6 +743,7 @@ function render() {
   if (state.screen === "result") result();
   if (state.screen === "two") twoPlayer();
   if (state.screen === "help") help();
+  if (state.screen === "info") infoProject();
 }
 
 app.addEventListener("click", (event) => {
@@ -716,6 +782,7 @@ app.addEventListener("click", (event) => {
   if (action === "chat") setScreen("chat");
   if (action === "leader") setScreen("leader");
   if (action === "mission") setScreen("mission");
+  if (action === "info") setScreen("info");
   if (action === "home") {
     state.playersMode = false;
     setScreen("home");
