@@ -7,6 +7,10 @@ const state = {
   hearts: 3,
   sound: true,
   player: { x: 18, y: 78 },
+  playerDirection: "down",
+  playerMoving: false,
+  playerFrame: 0,
+  lastWalkFrameAt: 0,
   activeObject: null,
   answered: new Set(),
   currentPlayer: 0,
@@ -30,7 +34,10 @@ const ASSETS = {
   },
   characters: {
     budi: "assets/characters/budi.png",
-    player: "assets/characters/player.png"
+    player: "assets/characters/player.png",
+    playerIdle: "assets/characters/player-idle.png",
+    playerWalk1: "assets/characters/player-walk-1.png",
+    playerWalk2: "assets/characters/player-walk-2.png"
   },
   objects: {
     kucing: "assets/objects/kucing.png",
@@ -57,6 +64,8 @@ const ASSETS = {
     juara: "assets/badges/juara-alam.png"
   }
 };
+
+let movementStopTimer = null;
 
 function markAssetLoaded(src) {
   availableAssets.add(src);
@@ -133,6 +142,7 @@ function resetRun() {
   state.hearts = 3;
   state.stage = 1;
   state.player = { x: 18, y: 78 };
+  resetPlayerMotion();
   state.answered = new Set();
   state.sortingDone = new Set();
   state.resultSaved = false;
@@ -155,6 +165,56 @@ function imageWithFallback(src, alt, className, fallbackHtml = "") {
       <span class="asset-fallback ${className}-fallback" hidden>${fallbackHtml}</span>
     </span>
   `;
+}
+
+function resetPlayerMotion(direction = "down") {
+  state.playerDirection = direction;
+  state.playerMoving = false;
+  state.playerFrame = 0;
+  state.lastWalkFrameAt = 0;
+  if (movementStopTimer) {
+    clearTimeout(movementStopTimer);
+    movementStopTimer = null;
+  }
+}
+
+function markPlayerMoving(direction) {
+  const now = Date.now();
+  state.playerDirection = direction;
+  state.playerMoving = true;
+
+  if (!state.lastWalkFrameAt || now - state.lastWalkFrameAt >= 140) {
+    state.playerFrame = state.playerFrame === 0 ? 1 : 0;
+    state.lastWalkFrameAt = now;
+  }
+
+  if (movementStopTimer) clearTimeout(movementStopTimer);
+  movementStopTimer = setTimeout(() => {
+    if (state.screen === "game") {
+      state.playerMoving = false;
+      state.playerFrame = 0;
+      const player = document.querySelector(".player");
+      const playerImg = player?.querySelector(".player-img");
+      if (player) player.className = playerClassName();
+      if (playerImg) playerImg.src = playerImageSrc();
+    }
+  }, 180);
+}
+
+function playerImageSrc() {
+  const idle = availableAssets.has(ASSETS.characters.playerIdle)
+    ? ASSETS.characters.playerIdle
+    : ASSETS.characters.player;
+  const walkFrames = [ASSETS.characters.playerWalk1, ASSETS.characters.playerWalk2]
+    .filter((src) => availableAssets.has(src));
+
+  if (!state.playerMoving || walkFrames.length === 0) return idle;
+  return walkFrames[state.playerFrame % walkFrames.length];
+}
+
+function playerClassName() {
+  const motion = state.playerMoving ? "is-moving" : "is-idle";
+  return `player ${motion} dir-${state.playerDirection}`;
 }
 
 function mascot() {
@@ -230,9 +290,9 @@ function renderGame() {
           <button class="budi-game-btn" data-action="chat">Tanya Budi</button>
         </div>
         ${data.objects.map((obj) => objectHtml(obj, nearby)).join("")}
-        <div class="player" style="left:${state.player.x}%;top:${state.player.y}%">
+        <div class="${playerClassName()}" style="left:${state.player.x}%;top:${state.player.y}%">
           <div class="player-asset">
-            <img class="asset-img player-img" src="${ASSETS.characters.player}" alt="Watak pemain" onload="this.parentElement.classList.add('asset-loaded')" onerror="console.warn('Asset gagal load:', this.getAttribute('src'));this.hidden=true;this.nextElementSibling.hidden=false;this.parentElement.classList.add('asset-missing')" />
+            <img class="asset-img player-img" src="${playerImageSrc()}" alt="Watak pemain" data-fallback-src="${ASSETS.characters.player}" onload="this.parentElement.classList.add('asset-loaded')" onerror="console.warn('Asset gagal load:', this.getAttribute('src'));if(this.dataset.fallbackSrc && this.getAttribute('src') !== this.dataset.fallbackSrc){this.src=this.dataset.fallbackSrc;this.dataset.fallbackSrc='';}else{this.hidden=true;this.nextElementSibling.hidden=false;this.parentElement.classList.add('asset-missing')}" />
             <div class="kid-character" hidden>
               <span class="kid-hair"></span><span class="kid-head"></span><span class="kid-body"></span><span class="kid-arm left"></span><span class="kid-arm right"></span><span class="kid-leg left"></span><span class="kid-leg right"></span>
             </div>
@@ -314,7 +374,8 @@ function getNearbyObject(data) {
 }
 
 function movePlayer(dir) {
-  const step = 4;
+  markPlayerMoving(dir);
+  const step = 3;
   if (dir === "up") state.player.y -= step;
   if (dir === "down") state.player.y += step;
   if (dir === "left") state.player.x -= step;
@@ -354,6 +415,7 @@ function nextAfterAnswer() {
     if (state.stage === 1) {
       state.stage = 2;
       state.player = { x: 18, y: 78 };
+      resetPlayerMotion();
       state.answered = new Set();
       renderGame();
       return;

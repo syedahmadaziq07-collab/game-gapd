@@ -2102,6 +2102,8 @@ button {
   z-index: 45;
   width: clamp(92px, 8.8vw, 126px);
   height: clamp(124px, 11vw, 164px);
+  transition: left 150ms ease-out, top 150ms ease-out;
+  will-change: left, top;
 }
 
 .asset-map.game-map .player-name {
@@ -2128,6 +2130,101 @@ button {
   object-fit: contain;
   background: transparent;
   border: none;
+}
+
+.asset-map.game-map .player-asset {
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+.asset-map.game-map .player.is-idle .player-asset {
+  animation: playerIdleBreath 1.35s ease-in-out infinite;
+}
+
+.asset-map.game-map .player.is-moving .player-asset {
+  animation: playerWalkBob 320ms ease-in-out infinite;
+}
+
+.asset-map.game-map .player.dir-left .player-img,
+.asset-map.game-map .player.dir-left .kid-character {
+  transform: scaleX(-1);
+}
+
+.asset-map.game-map .player.dir-right .player-img,
+.asset-map.game-map .player.dir-right .kid-character,
+.asset-map.game-map .player.dir-up .player-img,
+.asset-map.game-map .player.dir-down .player-img {
+  transform: scaleX(1);
+}
+
+.asset-map.game-map .player.dir-up.is-moving .player-asset {
+  animation-name: playerWalkUp;
+}
+
+.asset-map.game-map .player.dir-down.is-moving .player-asset {
+  animation-name: playerWalkDown;
+}
+
+.asset-map.game-map .player.is-moving .kid-leg.left {
+  animation: kidStepLeft 320ms ease-in-out infinite;
+}
+
+.asset-map.game-map .player.is-moving .kid-leg.right {
+  animation: kidStepRight 320ms ease-in-out infinite;
+}
+
+@keyframes playerIdleBreath {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.01);
+  }
+}
+
+@keyframes playerWalkBob {
+  0%, 100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(2deg);
+  }
+}
+
+@keyframes playerWalkUp {
+  0%, 100% {
+    transform: translateY(-1px) scale(.99) rotate(1deg);
+  }
+  50% {
+    transform: translateY(-7px) scale(.98) rotate(-1deg);
+  }
+}
+
+@keyframes playerWalkDown {
+  0%, 100% {
+    transform: translateY(1px) scale(1.01) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.02) rotate(1deg);
+  }
+}
+
+@keyframes kidStepLeft {
+  0%, 100% {
+    transform: translateX(-2px) rotate(7deg);
+  }
+  50% {
+    transform: translateX(2px) rotate(-8deg);
+  }
+}
+
+@keyframes kidStepRight {
+  0%, 100% {
+    transform: translateX(2px) rotate(-7deg);
+  }
+  50% {
+    transform: translateX(-2px) rotate(8deg);
+  }
 }
 
 .stage3-screen {
