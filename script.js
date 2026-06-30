@@ -280,6 +280,7 @@ function renderGame() {
             <span class="hud-chip">${state.players[0].name}: ${state.players[0].score}</span>
             <span class="hud-chip">${state.players[1].name}: ${state.players[1].score}</span>
           ` : ""}
+          <button class="small-btn icon-btn" data-action="fullscreen" aria-label="Skrin penuh">⛶</button>
           <button class="small-btn" data-action="mission">Peta</button>
           <button class="small-btn" data-action="home">Menu</button>
         </div>
@@ -792,6 +793,7 @@ app.addEventListener("click", (event) => {
     state.sound = !state.sound;
     render();
   }
+  if (action === "fullscreen") toggleFullscreen();
   if (action === "close-question") {
     state.player.x = Math.max(8, state.player.x - 8);
     renderGame();
@@ -810,6 +812,15 @@ app.addEventListener("submit", (event) => {
   addChat(budiReply(text), "budi");
   input.value = "";
 });
+
+function toggleFullscreen() {
+  const target = document.querySelector(".adventure-screen") || document.documentElement;
+  if (!document.fullscreenElement && target.requestFullscreen) {
+    target.requestFullscreen().catch(() => {});
+    return;
+  }
+  if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+}
 
 window.addEventListener("keydown", (event) => {
   if (state.screen !== "game") return;

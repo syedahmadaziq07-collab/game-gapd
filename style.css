@@ -2897,3 +2897,401 @@ button {
     padding: 14px;
   }
 }
+
+/* Responsive gameplay fit pass: keep the adventure view as one tidy game screen. */
+.screen.adventure-screen,
+.screen.adventure-screen.map-area {
+  min-height: 100svh;
+  padding: clamp(62px, 8svh, 86px) clamp(10px, 2vw, 22px) clamp(10px, 2svh, 18px);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.adventure-screen .topbar {
+  top: clamp(8px, 1.8svh, 16px);
+  left: clamp(8px, 2vw, 28px);
+  right: clamp(8px, 2vw, 28px);
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: start;
+  gap: clamp(8px, 1.4vw, 16px);
+}
+
+.adventure-screen .hud-right {
+  max-width: min(62vw, 760px);
+  justify-content: end;
+}
+
+.adventure-screen .hud,
+.adventure-screen .hud-chip,
+.adventure-screen .small-btn {
+  line-height: 1.05;
+}
+
+.adventure-screen .stage-board {
+  min-height: clamp(42px, 5.6svh, 58px);
+  padding: clamp(7px, 1.2vw, 12px) clamp(10px, 1.6vw, 16px);
+  border-width: clamp(4px, .7vw, 6px);
+  border-radius: clamp(14px, 1.8vw, 20px);
+  font-size: clamp(14px, 1.5vw, 20px);
+}
+
+.adventure-screen .stage-icon {
+  width: clamp(26px, 3vw, 34px);
+  height: clamp(26px, 3vw, 34px);
+  flex: 0 0 auto;
+}
+
+.adventure-screen .hud-chip,
+.adventure-screen .small-btn {
+  min-height: clamp(36px, 4.8svh, 46px);
+  padding: clamp(6px, .9vw, 9px) clamp(9px, 1.25vw, 13px);
+  border-width: clamp(3px, .45vw, 4px);
+  font-size: clamp(12px, 1.15vw, 16px);
+}
+
+.adventure-screen .icon-btn {
+  width: clamp(38px, 4.8svh, 48px);
+  min-width: clamp(38px, 4.8svh, 48px);
+  padding-inline: 0;
+  display: inline-grid;
+  place-items: center;
+  font-size: clamp(18px, 2vw, 24px);
+}
+
+.asset-map.game-map,
+.adventure-screen .game-map {
+  width: min(1280px, calc(100vw - clamp(20px, 4vw, 44px)));
+  height: min(calc((100vw - clamp(20px, 4vw, 44px)) * .5625), calc(100svh - clamp(82px, 11svh, 116px)));
+  min-height: min(640px, calc(100svh - 92px));
+  max-height: calc(100svh - clamp(82px, 11svh, 116px));
+  aspect-ratio: auto;
+  border-width: clamp(7px, 1vw, 13px);
+  border-radius: clamp(20px, 2.6vw, 30px);
+}
+
+.asset-map.game-map .dpad,
+.adventure-screen .dpad {
+  left: clamp(12px, 2vw, 22px);
+  bottom: clamp(12px, 2vw, 22px);
+  width: clamp(124px, 11vw, 158px);
+  height: clamp(124px, 11vw, 158px);
+  padding: clamp(9px, 1vw, 13px);
+  gap: clamp(5px, .6vw, 7px);
+}
+
+.adventure-screen .dpad button {
+  min-width: 0;
+  min-height: 0;
+  border-radius: clamp(14px, 1.5vw, 18px);
+  font-size: clamp(20px, 2.2vw, 26px);
+}
+
+.asset-map.game-map .mini-map,
+.adventure-screen .mini-map {
+  right: clamp(12px, 2vw, 22px);
+  bottom: clamp(12px, 2vw, 22px);
+  width: clamp(132px, 13vw, 178px);
+  height: clamp(92px, 9vw, 126px);
+  border-width: clamp(5px, .7vw, 7px);
+}
+
+.asset-map.game-map .game-budi,
+.game-budi {
+  left: clamp(14px, 2vw, 22px);
+  bottom: clamp(150px, 13.5vw, 186px);
+  width: clamp(208px, 22vw, 278px);
+  min-height: 0;
+  grid-template-columns: clamp(52px, 5.8vw, 74px) 1fr;
+  gap: clamp(7px, .9vw, 10px);
+  padding: clamp(7px, .9vw, 10px);
+  border-width: clamp(4px, .6vw, 5px);
+  border-radius: clamp(18px, 2vw, 24px);
+}
+
+.game-budi .asset-mascot,
+.mini-budi,
+.mini-budi .mascot {
+  width: clamp(52px, 5.8vw, 76px);
+  height: clamp(52px, 5.8vw, 76px);
+}
+
+.budi-tip {
+  font-size: clamp(11px, 1.15vw, 15px);
+}
+
+.budi-game-btn {
+  min-height: clamp(28px, 3.6svh, 36px);
+  font-size: clamp(11px, 1vw, 14px);
+}
+
+.question-card.panel {
+  width: min(560px, calc(100vw - 24px));
+  max-height: calc(100svh - 24px);
+  overflow: auto;
+}
+
+@media (min-width: 761px) and (max-width: 1180px) {
+  .screen.adventure-screen,
+  .screen.adventure-screen.map-area {
+    padding-top: clamp(76px, 10svh, 106px);
+  }
+
+  .adventure-screen .topbar {
+    grid-template-columns: minmax(260px, .85fr) minmax(330px, 1.15fr);
+  }
+
+  .adventure-screen .hud-right {
+    max-width: none;
+  }
+
+  .asset-map.game-map,
+  .adventure-screen .game-map {
+    width: min(1120px, calc(100vw - 28px));
+    height: min(calc((100vw - 28px) * .62), calc(100svh - 118px));
+    min-height: min(600px, calc(100svh - 118px));
+  }
+
+  .asset-map.game-map .game-budi,
+  .game-budi {
+    bottom: clamp(142px, 15vw, 170px);
+  }
+}
+
+@media (max-width: 760px) {
+  .screen.adventure-screen,
+  .screen.adventure-screen.map-area {
+    padding: clamp(82px, 15svh, 112px) 6px 6px;
+    align-items: start;
+  }
+
+  .adventure-screen .topbar {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .adventure-screen .stage-board {
+    width: 100%;
+    min-height: 38px;
+    justify-content: center;
+    text-align: center;
+    font-size: clamp(13px, 3.7vw, 16px);
+  }
+
+  .adventure-screen .stage-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .adventure-screen .hud-right {
+    width: 100%;
+    max-width: none;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .adventure-screen .hud-chip,
+  .adventure-screen .small-btn {
+    width: 100%;
+    min-height: 34px;
+    padding: 5px 6px;
+    border-width: 3px;
+    justify-content: center;
+    text-align: center;
+    font-size: clamp(10px, 2.8vw, 12px);
+    white-space: nowrap;
+  }
+
+  .adventure-screen .icon-btn {
+    min-width: 0;
+    width: 100%;
+    font-size: 18px;
+  }
+
+  .asset-map.game-map,
+  .adventure-screen .game-map {
+    width: calc(100vw - 12px);
+    height: calc(100svh - clamp(92px, 16svh, 118px));
+    min-height: 0;
+    max-height: none;
+    border-width: 7px;
+    border-radius: 20px;
+  }
+
+  .asset-map.game-map .map-object {
+    width: clamp(70px, 18vw, 92px);
+    height: clamp(68px, 17vw, 88px);
+  }
+
+  .asset-map.game-map .object-icon {
+    height: clamp(48px, 12vw, 62px);
+  }
+
+  .asset-map.game-map .object-img-wrap {
+    width: clamp(58px, 15vw, 78px);
+    height: clamp(44px, 12vw, 62px);
+  }
+
+  .asset-map.game-map .object-label {
+    max-width: 82px;
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+
+  .asset-map.game-map .player {
+    width: clamp(62px, 16vw, 80px);
+    height: clamp(84px, 22vw, 108px);
+  }
+
+  .asset-map.game-map .player-name {
+    max-width: 84px;
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .asset-map.game-map .dpad,
+  .adventure-screen .dpad {
+    left: 8px;
+    bottom: 8px;
+    width: clamp(104px, 29vw, 124px);
+    height: clamp(104px, 29vw, 124px);
+    padding: 8px;
+    border-width: 4px;
+  }
+
+  .adventure-screen .dpad button {
+    border-width: 3px;
+    border-radius: 13px;
+    font-size: clamp(17px, 5vw, 21px);
+  }
+
+  .asset-map.game-map .mini-map,
+  .adventure-screen .mini-map {
+    right: 8px;
+    bottom: 8px;
+    width: clamp(96px, 28vw, 118px);
+    height: clamp(70px, 20vw, 86px);
+    border-width: 5px;
+    border-radius: 15px;
+  }
+
+  .mini-title {
+    left: 6px;
+    top: 5px;
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+
+  .asset-map.game-map .game-budi,
+  .game-budi {
+    left: 8px;
+    bottom: calc(clamp(104px, 29vw, 124px) + 14px);
+    width: clamp(150px, 43vw, 186px);
+    grid-template-columns: 42px 1fr;
+    gap: 5px;
+    padding: 6px;
+    border-width: 4px;
+    border-radius: 16px;
+  }
+
+  .game-budi .asset-mascot,
+  .mini-budi,
+  .mini-budi .mascot {
+    width: 42px;
+    height: 42px;
+  }
+
+  .budi-tip {
+    font-size: clamp(9px, 2.55vw, 11px);
+    line-height: 1.05;
+  }
+
+  .budi-game-btn {
+    min-height: 26px;
+    padding: 3px 7px;
+    border-width: 2px;
+    font-size: 10px;
+  }
+
+  .question-card.panel {
+    width: calc(100vw - 18px);
+    padding: 14px;
+    border-width: 6px;
+    border-radius: 22px;
+  }
+
+  .question-card .question-icon {
+    width: clamp(96px, 30vw, 128px);
+    height: clamp(96px, 30vw, 128px);
+    font-size: clamp(56px, 18vw, 74px);
+  }
+}
+
+@media (max-width: 420px) {
+  .screen.adventure-screen,
+  .screen.adventure-screen.map-area {
+    padding-top: clamp(106px, 17svh, 116px);
+  }
+
+  .adventure-screen .hud-right {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .adventure-screen .hud-chip,
+  .adventure-screen .small-btn {
+    min-height: 31px;
+    font-size: 10px;
+  }
+
+  .asset-map.game-map,
+  .adventure-screen .game-map {
+    height: calc(100svh - clamp(112px, 18svh, 122px));
+  }
+}
+
+@media (orientation: landscape) and (max-height: 540px) {
+  .screen.adventure-screen,
+  .screen.adventure-screen.map-area {
+    padding: 72px 8px 6px;
+  }
+
+  .adventure-screen .topbar {
+    grid-template-columns: minmax(190px, .8fr) minmax(320px, 1.2fr);
+    gap: 6px;
+  }
+
+  .adventure-screen .stage-board,
+  .adventure-screen .hud-chip,
+  .adventure-screen .small-btn {
+    min-height: 32px;
+    font-size: 11px;
+    padding-block: 4px;
+  }
+
+  .asset-map.game-map,
+  .adventure-screen .game-map {
+    width: min(1000px, calc(100vw - 16px));
+    height: calc(100svh - 80px);
+    min-height: 0;
+  }
+
+  .asset-map.game-map .dpad,
+  .adventure-screen .dpad {
+    width: 96px;
+    height: 96px;
+  }
+
+  .asset-map.game-map .mini-map,
+  .adventure-screen .mini-map {
+    width: 102px;
+    height: 70px;
+  }
+
+  .asset-map.game-map .game-budi,
+  .game-budi {
+    bottom: 110px;
+    width: 164px;
+  }
+}
