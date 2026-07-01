@@ -269,7 +269,8 @@ function renderGame() {
   state.activeObject = nearby;
   app.className = "app-shell";
   app.innerHTML = `
-    <section class="screen map-area adventure-screen">
+    <section class="game-screen screen map-area adventure-screen game-map asset-map ${data.mapClass}" style="--stage-bg:url('${data.background}')">
+      ${mapDecorations()}
       <div class="topbar">
         <div class="panel hud stage-board"><span class="stage-icon">&#9733;</span>${data.title}</div>
         <div class="hud-right">
@@ -285,33 +286,30 @@ function renderGame() {
           <button class="small-btn" data-action="home">Menu</button>
         </div>
       </div>
-      <div class="game-map asset-map ${data.mapClass}" style="--stage-bg:url('${data.background}')">
-        ${mapDecorations()}
-        <div class="game-budi">
-          <div class="mini-budi">${mascot()}</div>
-          <div class="budi-tip">Jom dekati objek dan jawab soalan!</div>
-          <button class="budi-game-btn" data-action="chat">Tanya Budi</button>
-        </div>
-        ${data.objects.map((obj) => objectHtml(obj, nearby)).join("")}
-        <div class="${playerClassName()}" style="left:${state.player.x}%;top:${state.player.y}%">
-          <div class="player-asset">
-            <img class="asset-img player-img" src="${playerImageSrc()}" alt="Watak pemain" data-fallback-src="${ASSETS.characters.player}" onload="this.parentElement.classList.add('asset-loaded')" onerror="console.warn('Asset gagal load:', this.getAttribute('src'));if(this.dataset.fallbackSrc && this.getAttribute('src') !== this.dataset.fallbackSrc){this.src=this.dataset.fallbackSrc;this.dataset.fallbackSrc='';}else{this.hidden=true;this.nextElementSibling.hidden=false;this.parentElement.classList.add('asset-missing')}" />
-            <div class="kid-character" hidden>
-              <span class="kid-hair"></span><span class="kid-head"></span><span class="kid-body"></span><span class="kid-arm left"></span><span class="kid-arm right"></span><span class="kid-leg left"></span><span class="kid-leg right"></span>
-            </div>
+      <div class="game-budi">
+        <div class="mini-budi">${mascot()}</div>
+        <div class="budi-tip">Jom dekati objek dan jawab soalan!</div>
+        <button class="budi-game-btn" data-action="chat">Tanya Budi</button>
+      </div>
+      ${data.objects.map((obj) => objectHtml(obj, nearby)).join("")}
+      <div class="${playerClassName()}" style="left:${state.player.x}%;top:${state.player.y}%">
+        <div class="player-asset">
+          <img class="asset-img player-img" src="${playerImageSrc()}" alt="Watak pemain" data-fallback-src="${ASSETS.characters.player}" onload="this.parentElement.classList.add('asset-loaded')" onerror="console.warn('Asset gagal load:', this.getAttribute('src'));if(this.dataset.fallbackSrc && this.getAttribute('src') !== this.dataset.fallbackSrc){this.src=this.dataset.fallbackSrc;this.dataset.fallbackSrc='';}else{this.hidden=true;this.nextElementSibling.hidden=false;this.parentElement.classList.add('asset-missing')}" />
+          <div class="kid-character" hidden>
+            <span class="kid-hair"></span><span class="kid-head"></span><span class="kid-body"></span><span class="kid-arm left"></span><span class="kid-arm right"></span><span class="kid-leg left"></span><span class="kid-leg right"></span>
           </div>
-          <div class="player-name">${state.playersMode ? state.players[state.currentPlayer].name : "Pemain"}</div>
         </div>
-        <div class="dpad" aria-label="Controller sentuh">
-          <button class="up" data-move="up">&#9650;</button>
-          <button class="left" data-move="left">&#9664;</button>
-          <button class="center" data-action="ask">&#9679;</button>
-          <button class="right" data-move="right">&#9654;</button>
-          <button class="down" data-move="down">&#9660;</button>
-        </div>
-        <div class="mini-map" style="--mini-x:${state.player.x}%;--mini-y:${state.player.y}%">
-          <span class="mini-title">Peta</span>
-        </div>
+        <div class="player-name">${state.playersMode ? state.players[state.currentPlayer].name : "Pemain"}</div>
+      </div>
+      <div class="dpad" aria-label="Controller sentuh">
+        <button class="up" data-move="up">&#9650;</button>
+        <button class="left" data-move="left">&#9664;</button>
+        <button class="center" data-action="ask">&#9679;</button>
+        <button class="right" data-move="right">&#9654;</button>
+        <button class="down" data-move="down">&#9660;</button>
+      </div>
+      <div class="mini-map" style="--mini-x:${state.player.x}%;--mini-y:${state.player.y}%">
+        <span class="mini-title">Peta</span>
       </div>
     </section>
     ${nearby ? questionModal(nearby, data) : ""}
