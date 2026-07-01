@@ -105,10 +105,10 @@ const stageData = {
     question: "Ini haiwan atau tumbuhan?",
     choices: ["Haiwan", "Tumbuhan"],
     objects: [
-      { id: "kucing", icon: "&#128049;", image: ASSETS.objects.kucing, x: 28, y: 34, answer: "Haiwan", label: "Kucing" },
-      { id: "ayam", icon: "&#128020;", image: ASSETS.objects.ayam, x: 72, y: 28, answer: "Haiwan", label: "Ayam" },
-      { id: "bunga", icon: "&#127803;", image: ASSETS.objects.pokokBunga, x: 54, y: 66, answer: "Tumbuhan", label: "Pokok bunga" },
-      { id: "rumput", icon: "&#127807;", image: ASSETS.objects.rumput, x: 82, y: 78, answer: "Tumbuhan", label: "Rumput" }
+      { id: "kucing", icon: "&#128049;", image: ASSETS.objects.kucing, x: 30, y: 33, answer: "Haiwan", label: "Kucing" },
+      { id: "ayam", icon: "&#128020;", image: ASSETS.objects.ayam, x: 70, y: 30, answer: "Haiwan", label: "Ayam" },
+      { id: "bunga", icon: "&#127803;", image: ASSETS.objects.pokokBunga, x: 45, y: 68, answer: "Tumbuhan", label: "Pokok bunga" },
+      { id: "rumput", icon: "&#127807;", image: ASSETS.objects.rumput, x: 76, y: 70, answer: "Tumbuhan", label: "Rumput" }
     ]
   },
   2: {
@@ -271,6 +271,11 @@ function renderGame() {
   app.innerHTML = `
     <section class="game-screen screen map-area adventure-screen game-map asset-map ${data.mapClass}" style="--stage-bg:url('${data.background}')">
       ${mapDecorations()}
+      <div class="corner-decor" aria-hidden="true">
+        <span class="decor-bush"></span>
+        <span class="decor-rock"></span>
+        <span class="decor-flower"></span>
+      </div>
       <div class="topbar">
         <div class="panel hud stage-board"><span class="stage-icon">&#9733;</span>${data.title}</div>
         <div class="hud-right">

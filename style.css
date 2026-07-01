@@ -3296,7 +3296,7 @@ button {
   }
 }
 
-/* Fullscreen single-screen gameplay: the map itself is the game surface. */
+/* Fullscreen map background: one non-repeating image layer only. */
 .app-shell:has(.game-screen) {
   width: 100vw;
   height: 100vh;
@@ -3324,23 +3324,72 @@ button {
   border: 0;
   border-radius: 0;
   aspect-ratio: auto;
-  background:
-    var(--stage-bg) center / cover no-repeat,
-    linear-gradient(#8ee56c, #5ebe4d);
+  background-image: var(--stage-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   box-shadow: none;
 }
 
-.game-screen.asset-map.game-map::before {
-  inset: 0;
-  opacity: 1;
-  background-image: var(--stage-bg);
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+.game-screen.asset-map.game-map::before,
+.game-screen.adventure-screen::before {
+  display: none;
+  content: none;
 }
 
 .game-screen .css-map-fallback {
   inset: 0;
+}
+
+.game-screen .corner-decor {
+  position: absolute;
+  left: clamp(152px, 13vw, 198px);
+  bottom: max(clamp(18px, 2.3vw, 34px), env(safe-area-inset-bottom));
+  width: clamp(116px, 12vw, 170px);
+  height: clamp(70px, 7vw, 98px);
+  z-index: 8;
+  pointer-events: none;
+  opacity: .96;
+  filter: drop-shadow(0 8px 5px rgba(38, 55, 25, .22));
+}
+
+.game-screen .decor-bush,
+.game-screen .decor-rock,
+.game-screen .decor-flower {
+  position: absolute;
+  display: block;
+}
+
+.game-screen .decor-bush {
+  left: 0;
+  bottom: 5px;
+  width: 82px;
+  height: 42px;
+  border-radius: 50px 50px 18px 18px;
+  background:
+    radial-gradient(circle at 20% 62%, #56c85b 0 24px, transparent 25px),
+    radial-gradient(circle at 52% 38%, #2f9840 0 30px, transparent 31px),
+    radial-gradient(circle at 80% 64%, #47b94d 0 24px, transparent 25px);
+}
+
+.game-screen .decor-rock {
+  right: 14px;
+  bottom: 3px;
+  width: 44px;
+  height: 27px;
+  border: 3px solid rgba(91, 96, 86, .38);
+  border-radius: 50% 45% 44% 50%;
+  background: linear-gradient(#d2d2c6, #8d9389);
+}
+
+.game-screen .decor-flower {
+  left: 74px;
+  bottom: 30px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #ff6e9f;
+  box-shadow: 12px 0 #ffd84c, 6px 11px #fff0a2, 2px 23px 0 -6px #2c9a3b;
 }
 
 .game-screen .topbar,
@@ -3419,8 +3468,8 @@ button {
 .game-screen .game-budi {
   z-index: 42;
   left: max(clamp(14px, 2vw, 24px), env(safe-area-inset-left));
-  bottom: calc(max(clamp(12px, 2vw, 24px), env(safe-area-inset-bottom)) + clamp(126px, 11vw, 166px));
-  width: clamp(190px, 20vw, 270px);
+  bottom: calc(max(clamp(12px, 2vw, 24px), env(safe-area-inset-bottom)) + clamp(118px, 10.6vw, 158px));
+  width: clamp(184px, 19vw, 258px);
 }
 
 .game-screen .map-object {
@@ -3560,8 +3609,8 @@ button {
 
   .game-screen .game-budi {
     left: max(8px, env(safe-area-inset-left));
-    bottom: calc(max(8px, env(safe-area-inset-bottom)) + clamp(108px, 30vw, 128px));
-    width: clamp(148px, 42vw, 184px);
+    bottom: calc(max(8px, env(safe-area-inset-bottom)) + clamp(104px, 29vw, 122px));
+    width: clamp(142px, 40vw, 174px);
     grid-template-columns: 40px 1fr;
     padding: 6px;
     gap: 5px;
@@ -3594,6 +3643,35 @@ button {
   .game-screen.asset-map.game-map .player {
     width: clamp(60px, 16vw, 78px);
     height: clamp(82px, 22vw, 106px);
+  }
+
+  .game-screen .corner-decor {
+    left: clamp(118px, 32vw, 144px);
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: 92px;
+    height: 58px;
+  }
+
+  .game-screen .decor-bush {
+    width: 60px;
+    height: 32px;
+    background:
+      radial-gradient(circle at 20% 62%, #56c85b 0 17px, transparent 18px),
+      radial-gradient(circle at 52% 38%, #2f9840 0 21px, transparent 22px),
+      radial-gradient(circle at 80% 64%, #47b94d 0 17px, transparent 18px);
+  }
+
+  .game-screen .decor-rock {
+    right: 8px;
+    width: 32px;
+    height: 20px;
+  }
+
+  .game-screen .decor-flower {
+    left: 54px;
+    bottom: 22px;
+    transform: scale(.78);
+    transform-origin: left bottom;
   }
 
   .stage3-screen .stage3-layout {
@@ -3658,5 +3736,11 @@ button {
   .game-screen .game-budi {
     bottom: calc(max(8px, env(safe-area-inset-bottom)) + 100px);
     width: 160px;
+  }
+
+  .game-screen .corner-decor {
+    left: 108px;
+    transform: scale(.84);
+    transform-origin: left bottom;
   }
 }
